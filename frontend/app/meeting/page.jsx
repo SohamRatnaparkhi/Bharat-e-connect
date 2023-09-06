@@ -39,24 +39,26 @@ const MeetHome = () => {
 
 
   const createMeeting = async () => {
-    const { data, status } = await axios.post('http://localhost:5000/api/meetings',
-      {
+    try {
+      const response = await axios.post('/api/meetings', {
         meetTitle: meetTitle,
         meetDescription: meetDescription,
         muteOnEntry: muteOnEntry,
-        videoOnEntry: disableVideo,
+        disableVideo: disableVideo,
         hostWalletAddresses: hostWalletAddresses,
-        roomLocked: true,
-        API_KEY: ENV.API_KEY,
-      })
-    if (status == 200) {
-      setMeetingId(data.data.roomId)
-      console.log(meetingId)
-    } else {
-      console.log("Error")
+        API_KEY: ENV.API_KEY, // Assuming ENV.API_KEY is defined elsewhere
+      });
+      console.log(response)
+      if (response.status === 200) {
+        setMeetingId(response.data.data.roomId);
+        console.log(meetingId);
+      } else {
+        console.log('Error');
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
-  // const { state, send } = useMeetingMachine();
   return (
     <>
       <h1>Meeting page</h1>

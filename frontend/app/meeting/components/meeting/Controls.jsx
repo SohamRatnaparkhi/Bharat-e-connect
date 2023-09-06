@@ -22,6 +22,11 @@ const Controls = () => {
             produceAudio(stream);
         }
     };
+    const disableScreenShare = () => {
+        // stopVideoStream();
+        // stopAudioStream();
+        shareScreenRef.current.srcObject = null;
+    }
     const {
         produceAudio,
         stopProducingAudio,
@@ -67,25 +72,27 @@ const Controls = () => {
             {error}
             <div className="flex gap-4 flex-wrap">
                 <Button
-                    disabled={!fetchVideoStream.isCallable}
+                    disabled={isAudioOn}
                     onClick={() => fetchAudioStream()}
                 >
                     Start Mic (Un-mute)
                 </Button>
                 <Button
-                    disabled={!fetchAudioStream.isCallable}
+                    disabled={isVideoOn}
                     onClick={() => fetchVideoStream()}
                 >
                     Start Camera
                 </Button>
 
                 <Button
+                    disabled={!isAudioOn}
                     onClick={() => stopAudioStream()}
                 >
                     Stop Mic (Mute)
                 </Button>
 
                 <Button
+                    disabled={!isVideoOn}
                     onClick={() => stopVideoStream()}
                 >
                     Stop Camera
@@ -99,6 +106,9 @@ const Controls = () => {
 
                 <Button onClick={() => enableShareScreen()}>
                     Share Screen
+                </Button>
+                <Button onClick={() => disableScreenShare()}>
+                    Stop Sharing Screen
                 </Button>
             </div>
             <div>

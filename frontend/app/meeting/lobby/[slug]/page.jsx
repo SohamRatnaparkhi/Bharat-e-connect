@@ -22,7 +22,6 @@ import { useRouter } from "next/navigation";
 const MeetLobby = ({ params }) => {
 
   const videoRef = useRef();
-  const [displayNameText, setDisplayNameText] = React.useState("");
   const [peerAddress, setPeerAddress] = React.useState("");
   const { push } = useRouter();
 
@@ -41,7 +40,6 @@ const MeetLobby = ({ params }) => {
     error,
   } = useVideo();
   const { joinRoom } = useRoom();
-  const { setDisplayName } = useAppUtils();
 
   useEffect(() => {
     const setPeerEthAddress = async () => {

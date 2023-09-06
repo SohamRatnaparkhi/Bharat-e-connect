@@ -27,15 +27,14 @@ const Room = ({ params }) => {
   const { setDisplayName } = useAppUtils();
 
   useEffect(() => {
-    fetchVideoStream();
-    fetchAudioStream();
+    stopVideoStream();
+    stopAudioStream();
   }, [])
   if (isLoading) {
     return <div>Loading...</div>;
   }
   useEventListener("room:peer-joined", ({ peerId, role }) => {
     if (role === "peer") {
-      // changePeerRole(peerId, "listener");
       console.log("peer joined")
     }
   });
