@@ -43,6 +43,7 @@ const VideoScreen = ({ peers }) => {
             <br />
             My stream
             <br />
+            {JSON.stringify(me)}
             <video ref={videoRef} autoPlay muted></video>
         </div>
     )

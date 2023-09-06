@@ -26,10 +26,10 @@ const Room = ({ params }) => {
   const [displayNameText, setDisplayNameText] = React.useState("");
   const { setDisplayName } = useAppUtils();
 
-  useEffect(() => {
-    stopVideoStream();
-    stopAudioStream();
-  }, [])
+  // useEffect(() => {
+  //   stopVideoStream();
+  //   stopAudioStream();
+  // }, [])
   if (isLoading) {
     return <div>Loading...</div>;
   }

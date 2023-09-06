@@ -23,8 +23,6 @@ const Controls = () => {
         }
     };
     const disableScreenShare = () => {
-        // stopVideoStream();
-        // stopAudioStream();
         shareScreenRef.current.srcObject = null;
     }
     const {
@@ -112,7 +110,7 @@ const Controls = () => {
                 </Button>
             </div>
             <div>
-                {<video
+                {shareScreenRef && <video
                     ref={shareScreenRef}
                     muted
                     autoPlay
