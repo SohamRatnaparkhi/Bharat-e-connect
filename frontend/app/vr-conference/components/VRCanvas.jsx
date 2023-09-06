@@ -5,10 +5,20 @@ import { Canvas } from '@react-three/fiber'
 import { ConferenceTable } from './ConferenceTable'
 import { SittingSoham } from './Sitting-soham'
 
+import { positions } from '../positions'
+import { VRButton, XR } from '@react-three/xr'
+
 const VRCanvas = () => {
   return (
     <div style={{'backgroundColor':'transparent'}}>
+      <VRButton style={{
+        'position': 'absolute',
+        'top': '10px',
+        'width': '20px',
+        'height': '10px'
+      }}/>
         <Canvas style={{'width':'100vw', 'height':'100vh', 'backgroundColor':'transparent'}}>
+          <XR>
             <OrbitControls />
             <ambientLight />
             <axesHelper args={[50]} />
@@ -24,8 +34,8 @@ const VRCanvas = () => {
             </mesh> */}
             <ConferenceTable position={[0, 0, 0]} />
             {/* <SittingSoham position={[0, 0.3, -2]} /> */}
-            <SittingSoham position={[0, 0.3, -2]} rotation={[0, Math.PI/2, 0]} />
-
+            <SittingSoham position={positions[3]} rotation={[0, Math.PI/2, 0]} />
+          </XR>
         </Canvas>
     </div>
   )
