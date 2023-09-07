@@ -1,8 +1,8 @@
-import axios from 'axios';
+import { CREATE_MEET_ROOM_URL } from '@/app/constants/Api';
+import { ENV } from '@/app/constants/EnvVars';
 import { NextResponse } from 'next/server';
 
 export async function POST(request) {
-    console.log("object")
     try {
         if (request.method === 'POST') {
             console.log(request.body)
@@ -11,11 +11,9 @@ export async function POST(request) {
                 meetDescription,
                 muteOnEntry,
                 disableVideo,
-                hostWalletAddresses,
-                API_KEY,
             } = await request.json();
             const res = await fetch(
-                'https://api.huddle01.com/api/v1/create-room',
+                CREATE_MEET_ROOM_URL,
                 {
                     method: 'POST',
                     body: JSON.stringify({
@@ -27,7 +25,7 @@ export async function POST(request) {
                     }),
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-api-key': API_KEY,
+                        'x-api-key': ENV.API_KEY,
                     },
                 }
             );

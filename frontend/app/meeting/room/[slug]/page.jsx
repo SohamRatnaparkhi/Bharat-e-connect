@@ -2,11 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import {
-  useAudio,
-  useLobby,
   usePeers,
   useRoom,
-  useVideo,
 } from "@huddle01/react/hooks";
 import Participants from '../../components/meeting/Participants';
 import Controls from '../../components/meeting/Controls';
@@ -15,42 +12,43 @@ import VideoScreen from '../../components/meeting/VideoScreen';
 import { useRouter } from "next/navigation";
 import { useAppUtils } from "@huddle01/react/app-utils";
 import { useEventListener } from "@huddle01/react/hooks";
+import { getPeer } from '@/app/hooks/Huddle';
 
 const Room = ({ params }) => {
-  const { isLobbyJoined } = useLobby();
   const { push } = useRouter();
-  const { joinRoom, isRoomJoined, error, isLoading, roomId } = useRoom();
-  const { fetchAudioStream, stopAudioStream } = useAudio();
-  const { fetchVideoStream, stopVideoStream, stream: camStream } = useVideo();
-  console.log(isLoading, isRoomJoined)
+  const { isRoomJoined, error, isLoading, roomId } = useRoom();
+  const { peers } = usePeers();
   const [displayNameText, setDisplayNameText] = React.useState("");
   const { setDisplayName } = useAppUtils();
 
-  // useEffect(() => {
-  //   stopVideoStream();
-  //   stopAudioStream();
-  // }, [])
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  useEventListener("room:peer-joined", ({ peerId, role }) => {
-    if (role === "peer") {
-      console.log("peer joined")
-    }
-  });
-  useEventListener("room:me-left", () => {
-    push("/meeting");
-  });
   useEffect(() => {
     if (!isRoomJoined) {
       push(`/meeting/lobby/${params.slug}`);
       return;
     }
   }, []);
+  const origin =
+    typeof window !== 'undefined' && window.location.origin
+      ? window.location.origin
+      : '';
 
-  const { peers } = usePeers();
+  const URL = `${origin}/meeting/room/${params.slug}`;
+  console.log(URL)
 
-  console.log(roomId)
+  useEventListener("room:peer-joined", ({ peerId, role }) => {
+    alert("Guest joint the room");
+  });
+  useEventListener("room:me-left", () => {
+    push("/meeting");
+  });
+  useEventListener("room:peer-left", ({ peerId }) => {
+    alert("Guest left the room");
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       {error}
@@ -72,7 +70,7 @@ const Room = ({ params }) => {
         {`SET_DISPLAY_NAME`}
       </Button>
       <VideoScreen peers={peers} />
-      <Controls />
+      <Controls URL={URL} />
       <Participants peers={peers} />
     </div>
   )

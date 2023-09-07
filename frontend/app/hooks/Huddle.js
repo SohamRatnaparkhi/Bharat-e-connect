@@ -11,7 +11,11 @@ const initHuddle = () => {
     return { isInitialized, roomState, me }
 }
 
+const getPeer = (peerId, peers) => {
+    return peers[peerId]
+}
 
 export {
     initHuddle,
+    getPeer,
 }

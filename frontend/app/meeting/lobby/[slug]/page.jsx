@@ -40,6 +40,9 @@ const MeetLobby = ({ params }) => {
     error,
   } = useVideo();
   const { joinRoom } = useRoom();
+  const { setDisplayName } = useAppUtils();
+
+  const [displayNameText, setDisplayNameText] = React.useState("");
 
   useEffect(() => {
     const setPeerEthAddress = async () => {
@@ -115,6 +118,21 @@ const MeetLobby = ({ params }) => {
 
       {isLobbyJoined &&
         <div className="flex gap-4 flex-wrap">
+          <input
+            type="text"
+            placeholder="Your display name"
+            value={displayNameText}
+            onChange={(e) => setDisplayNameText(e.target.value)}
+            className="border-2 border-gray-300 text-black h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none mr-2"
+          />
+          <Button
+            disabled={!setDisplayName.isCallable}
+            onClick={() => {
+              setDisplayName(displayNameText);
+            }}
+          >
+            {`SET_DISPLAY_NAME`}
+          </Button>
           <Button
             disabled={!fetchVideoStream.isCallable}
             onClick={fetchVideoStream}
