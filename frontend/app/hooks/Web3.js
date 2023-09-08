@@ -11,6 +11,12 @@ const getWalletDetails = async () => {
     return { address, signer, provider };
 };
 
+const checkSBTBalance = async () => {
+    return true;
+}
+
+
 export {
-    getWalletDetails
+    getWalletDetails,
+    checkSBTBalance,
 }

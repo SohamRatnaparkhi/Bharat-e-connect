@@ -17,12 +17,20 @@ const createMeeting = async (meetPresets) => {
     }
 };
 
-const getMeetType = async (roomId) => {
+const getMeeting = async (roomId) => {
     try {
-        const { data } = await axios.get(`/api/meetings/${roomId}`);
+        console.log("In outer")
+        const { data, status, error } = await axios.get(`/api/meetings/${roomId}`);
+        console.log(data, status, error)
+        if (status === 200) {
+            return {
+                data,
+                error: null,
+            }
+        }
         return {
             data,
-            error: null,
+            error: error,
         }
     } catch (error) {
         return {
@@ -33,6 +41,6 @@ const getMeetType = async (roomId) => {
 }
 export {
     createMeeting,
-    getMeetType,
+    getMeeting,
 }
 

@@ -85,6 +85,7 @@ const PrivateMeet = () => {
       disableVideo,
       hostWalletAddresses,
       participantsWalletAddresses,
+      isPrivate: true,
     }
     const { data, error } = await createMeeting(meetPresets);
     if (error)

@@ -1,16 +1,19 @@
 import { CREATE_MEET_ROOM_URL } from '@/app/constants/Api';
 import { ENV } from '@/app/constants/EnvVars';
+import prisma from '@/app/lib/PrismaDb';
 import { NextResponse } from 'next/server';
 
-export async function POST(request) {
+async function createMeeting(request) {
     try {
         if (request.method === 'POST') {
-            console.log(request.body)
             const {
                 meetTitle,
                 meetDescription,
                 muteOnEntry,
+                isPrivate,
                 disableVideo,
+                hostWalletAddresses,
+                participantsWalletAddresses,
             } = await request.json();
             const res = await fetch(
                 CREATE_MEET_ROOM_URL,
@@ -29,9 +32,26 @@ export async function POST(request) {
                     },
                 }
             );
-            // Return the Axios response to the client
+            // insert meeting into database
             const response = await res.json();
-            console.log(response)
+            const newMeeting = await prisma.meeting.create({
+                data: {
+                    hostAddresses: hostWalletAddresses,
+                    participantAddresses: participantsWalletAddresses,
+                    title: meetTitle,
+                    roomId: response.data.roomId,
+                    roomPassword: "",
+                    contractAddress: "",
+                    description: meetDescription,
+                    meetConfig: {
+                        videoDisabled: disableVideo,
+                        isPrivate: isPrivate,
+                        audioDisabled: muteOnEntry,
+                    }
+                },
+            });
+            // Return the Axios response to the client
+            console.log(newMeeting)
             return NextResponse.json({
                 status: response.status,
                 data: response.data,
@@ -45,4 +65,8 @@ export async function POST(request) {
             error: error.message,
         });
     }
+}
+
+export {
+    createMeeting as POST,
 }

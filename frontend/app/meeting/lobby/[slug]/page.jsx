@@ -1,7 +1,7 @@
 "use client";
 
 import Button from '@/app/components/Button';
-import { getWalletDetails } from '@/app/hooks/Web3';
+import { checkSBTBalance, getWalletDetails } from '@/app/hooks/Web3';
 import {
   useAudio,
   useLobby,
@@ -18,17 +18,21 @@ import Controls from '../../components/meeting/Controls';
 import VideoScreen from '../../components/meeting/VideoScreen';
 import Participants from '../../components/meeting/Participants';
 import { useRouter } from "next/navigation";
+import { getMeeting } from '@/app/hooks/MeetApiCalls';
+import { data } from 'autoprefixer';
 
 const MeetLobby = ({ params }) => {
 
   const videoRef = useRef();
-  const [peerAddress, setPeerAddress] = React.useState("");
+  const [peerAddress, setPeerAddress] = React.useState(null);
   const { push } = useRouter();
+  const [isPeerHost, setIsPeerHost] = React.useState(false);
 
   const { initialize } = useHuddle01();
   const { isRoomJoined } = useRoom();
   const { peers } = usePeers();
   const { joinLobby, leaveLobby, isLoading, isLobbyJoined } = useLobby();
+  const [accessDenied, setAccessDenied] = React.useState(false);
 
   const {
     fetchAudioStream,
@@ -55,12 +59,42 @@ const MeetLobby = ({ params }) => {
     setPeerEthAddress();
   }, []);
 
-  useEffect(() => {
+  const pushPeerToLobby = () => {
     if (!isLobbyJoined) {
       initialize(process.env.NEXT_PUBLIC_PROJECT_ID ?? "");
       joinLobby(params.slug);
       return;
     }
+  }
+
+  const checkLobbyConditions = async () => {
+    const meetDetails = await getMeeting(params.slug);
+    console.log(meetDetails)
+    const meet = meetDetails.data?.data;
+    if (meet.hostAddresses.includes(peerAddress)) {
+      console.log("host")
+      setIsPeerHost(true);
+      setAccessDenied(false);
+      pushPeerToLobby();
+    }
+    else if (meet.meetConfig.isPrivate) {
+      console.log("private meet")
+      const hasSBTBalance = await checkSBTBalance();
+      if (meet.participantAddresses.includes(peerAddress) && hasSBTBalance) {
+        console.log("allowed")
+        setAccessDenied(false);
+        pushPeerToLobby();
+      } else
+        setAccessDenied(true);
+    } else
+      pushPeerToLobby();
+  }
+
+  useEffect(() => {
+    const checkMeetingConditions = async () => {
+      await checkLobbyConditions();
+    }
+    checkMeetingConditions();
   }, []);
 
 
@@ -90,6 +124,7 @@ const MeetLobby = ({ params }) => {
   }
 
   if (isLoading) return (<div>...loading</div>)
+  if (accessDenied) return (<div>Access Denied</div>)
   return (
     <div>
       {isLobbyJoined}
@@ -102,7 +137,7 @@ const MeetLobby = ({ params }) => {
         <>
           <Button
             disabled={!joinLobby.isCallable}
-            onClick={() => joinLobby(params.slug)
+            onClick={() => checkLobbyConditions()
             }>
             Join Lobby
           </Button>
@@ -165,6 +200,17 @@ const MeetLobby = ({ params }) => {
           </Button>
 
         </div>
+      }
+
+      <br />
+
+      {
+        isPeerHost && (
+          <div>
+            Add Participants:
+
+          </div>
+        )
       }
       Me Video:
       <video ref={videoRef} autoPlay muted></video>
