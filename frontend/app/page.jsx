@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div>
       <h1>Home</h1>
-      <Link href="/meeting"> Create meeting </Link>
+      <Link href="/schedule"> Create meeting </Link>
     </div>
   )
 }

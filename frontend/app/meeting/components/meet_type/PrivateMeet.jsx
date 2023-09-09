@@ -98,6 +98,7 @@ const PrivateMeet = () => {
 
   return (
     <div>
+      <h1>Private Meet</h1>
       <input
         type="text"
         placeholder="Meeting Title"
