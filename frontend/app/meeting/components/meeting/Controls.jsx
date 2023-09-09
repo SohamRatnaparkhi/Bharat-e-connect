@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useRoom, useVideo, useAudio } from '@huddle01/react/hooks';
 import Button from '@/app/components/Button';
@@ -11,21 +11,41 @@ import { useEventListener, useRecording } from '@huddle01/react/hooks';
 const Controls = ({ URL }) => {
     const { push } = useRouter();
     const shareScreenRef = useRef(null);
+    const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
+    const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
     const { startRecording, stopRecording, isStarting, inProgress, isStopping, data } = useRecording();
     const enableShareScreen = async () => {
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: true,
-            audio: true,
-        });
-        if (shareScreenRef.current && stream) {
-            shareScreenRef.current.srcObject = stream;
-            produceVideo(stream);
-            produceAudio(stream);
+        try {
+            const stream = await navigator.mediaDevices.getDisplayMedia({
+                video: true,
+                audio: true,
+            });
+            if (shareScreenRef.current && stream) {
+                shareScreenRef.current.srcObject = stream;
+                produceVideo(stream);
+                produceAudio(stream);
+            }
+        } catch (error) {
+            console.log(error)
         }
     };
     const disableScreenShare = () => {
+        let tracks = shareScreenRef.current.srcObject.getTracks();
+        tracks.forEach((track) => track.stop());
         shareScreenRef.current.srcObject = null;
+        stopProducingAudio();
+        stopProducingVideo();
+        if (isAudioPlaying) fetchAudioStream();
+        if (isVideoPlaying) fetchVideoStream();
     }
+    useEffect(() => {
+        if (shareScreenRef.current == null) {
+            stopProducingAudio();
+            stopProducingVideo();
+            if (isAudioPlaying) fetchAudioStream();
+            if (isVideoPlaying) fetchVideoStream();
+        }
+    }, [shareScreenRef.current])
     const {
         produceAudio,
         stopProducingAudio,
@@ -77,33 +97,45 @@ const Controls = ({ URL }) => {
             <div className="flex gap-4 flex-wrap">
                 <Button
                     disabled={isAudioOn}
-                    onClick={() => fetchAudioStream()}
+                    onClick={() => {
+                        fetchAudioStream()
+                        setIsAudioPlaying(true)
+                    }}
                 >
                     Start Mic (Un-mute)
                 </Button>
                 <Button
                     disabled={isVideoOn}
-                    onClick={() => fetchVideoStream()}
+                    onClick={() => {
+                        fetchVideoStream()
+                        setIsVideoPlaying(true)
+                    }}
                 >
                     Start Camera
                 </Button>
 
                 <Button
                     disabled={!isAudioOn}
-                    onClick={() => stopAudioStream()}
+                    onClick={() => {
+                        stopAudioStream()
+                        setIsAudioPlaying(false)
+                    }}
                 >
                     Stop Mic (Mute)
                 </Button>
 
                 <Button
                     disabled={!isVideoOn}
-                    onClick={() => stopVideoStream()}
+                    onClick={() => {
+                        stopVideoStream()
+                        setIsVideoPlaying(false)
+                    }}
                 >
                     Stop Camera
                 </Button>
                 <Button disabled={!leaveRoom.isCallable} onClick={() => {
                     leaveRoom();
-                    push('/meeting/')
+                    push('/schedule/')
                 }}>
                     LEAVE_ROOM
                 </Button>

@@ -14,8 +14,7 @@ const VideoScreen = ({ peers }) => {
     });
     useEventListener("app:cam-off", () => {
         videoRef.current.srcObject = null;
-    }
-    );
+    });
     return (
         <div>
             {Object.values(peers)
@@ -26,10 +25,8 @@ const VideoScreen = ({ peers }) => {
                             key={peer.peerId}
                             peerId={peer.peerId}
                             track={peer.cam}
-                            debug
                         />
-                        role: {peer.role}
-                        <br />
+                        Role: {peer.role},
                         Name: {peer.displayName?.split(',')?.[0]}
                     </>
                 ))}
