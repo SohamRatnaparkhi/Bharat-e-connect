@@ -19,6 +19,7 @@ import VideoScreen from '../../components/meeting/VideoScreen';
 import Participants from '../../components/meeting/Participants';
 import { useRouter } from "next/navigation";
 import { getMeeting } from '@/app/hooks/MeetApiCalls';
+import { useMeetingStore, useMeStore } from '@/app/store/MeetingStore';
 
 const MeetLobby = ({ params }) => {
 
@@ -27,7 +28,7 @@ const MeetLobby = ({ params }) => {
   const { push } = useRouter();
   const [isPeerHost, setIsPeerHost] = React.useState(false);
 
-  const { initialize } = useHuddle01();
+  const { initialize, me } = useHuddle01();
   const { isRoomJoined } = useRoom();
   const { peers } = usePeers();
   const { joinLobby, leaveLobby, isLoading, isLobbyJoined } = useLobby();
@@ -47,18 +48,36 @@ const MeetLobby = ({ params }) => {
 
   const [displayNameText, setDisplayNameText] = React.useState("");
 
+  const meetingPeers = useMeetingStore(state => state.peers);
+  const addPeer = useMeetingStore(state => state.addPeer);
+  const hostAddresses = useMeetingStore(state => state.hostAddresses);
+  const addHostAddress = useMeetingStore(state => state.addHostAddress);
+  const setIsHost = useMeStore(state => state.setIsHost);
+  const setMuteOnJoin = useMeetingStore(state => state.setMuteOnJoin);
+  const setDisableVideoOnJoin = useMeetingStore(state => state.setDisableVideoOnJoin);
+  const setMyPeerId = useMeStore(state => state.setMyPeerId);
+
   useEffect(() => {
     const setPeerEthAddress = async () => {
       var { address } = await getWalletDetails();
-      address = await address;
       if (address)
         setPeerAddress(address);
       console.log(address)
     };
     setPeerEthAddress();
-  }, []);
+  }, [peerAddress]);
 
   const pushPeerToLobby = () => {
+    addPeer({
+      address: peerAddress,
+      displayName: displayNameText,
+      isHost: isPeerHost,
+      peerId: me.meId,
+    })
+    if (isPeerHost) {
+      setIsHost(true);
+      addHostAddress(peerAddress);
+    }
     if (!isLobbyJoined) {
       initialize(process.env.NEXT_PUBLIC_PROJECT_ID ?? "");
       joinLobby(params.slug);
@@ -67,13 +86,21 @@ const MeetLobby = ({ params }) => {
   }
 
   const checkLobbyConditions = async () => {
+    var { address } = await getWalletDetails();
     const meetDetails = await getMeeting(params.slug);
     console.log(meetDetails)
     const meet = meetDetails.data?.data;
-    if (meet.hostAddresses.includes(peerAddress)) {
+    console.log(meet.hostAddresses, address)
+    if (meet?.meetConfig.audioDisabled)
+      setMuteOnJoin(true);
+    if (meet?.meetConfig.videoDisabled)
+      setDisableVideoOnJoin(true);
+    if (meet.hostAddresses.includes(address)) {
       console.log("host")
       setIsPeerHost(true);
       setAccessDenied(false);
+      addHostAddress(peerAddress)
+      setIsHost(true);
       pushPeerToLobby();
     }
     else if (meet.meetConfig.isPrivate) {
@@ -105,7 +132,8 @@ const MeetLobby = ({ params }) => {
   });
 
   useEventListener("lobby:joined", () => {
-    console.log("lobby:joined");
+    console.log("lobby:joined by ", me);
+    setMyPeerId(me.meId);
   });
 
   useEffect(() => {

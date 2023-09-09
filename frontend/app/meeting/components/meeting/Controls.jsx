@@ -7,6 +7,7 @@ import Button from '@/app/components/Button';
 import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useEventListener, useRecording } from '@huddle01/react/hooks';
+import { useMeStore, useMeetingStore } from '@/app/store/MeetingStore';
 
 const Controls = ({ URL }) => {
     const { push } = useRouter();
@@ -14,6 +15,8 @@ const Controls = ({ URL }) => {
     const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
     const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
     const { startRecording, stopRecording, isStarting, inProgress, isStopping, data } = useRecording();
+    const isMuteOnJoin = useMeetingStore(state => state.isMuteOnJoin);
+    const isDisableVideoOnJoin = useMeetingStore(state => state.isDisableVideoOnJoin);
     const enableShareScreen = async () => {
         try {
             const stream = await navigator.mediaDevices.getDisplayMedia({
@@ -38,6 +41,17 @@ const Controls = ({ URL }) => {
         if (isAudioPlaying) fetchAudioStream();
         if (isVideoPlaying) fetchVideoStream();
     }
+    useEffect(() => {
+        console.log(isMuteOnJoin, isDisableVideoOnJoin)
+        if (isMuteOnJoin) {
+            stopAudioStream();
+            setIsAudioPlaying(false)
+        }
+        if (isDisableVideoOnJoin) {
+            stopVideoStream();
+            setIsVideoPlaying(false)
+        }
+    }, []);
     useEffect(() => {
         if (shareScreenRef.current == null) {
             stopProducingAudio();

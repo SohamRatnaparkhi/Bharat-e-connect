@@ -20,12 +20,20 @@ const PrivateMeet = () => {
 
   useEffect(() => {
     const setHostAddress = async () => {
-      const { address } = await getWalletDetails();
-      if (address)
-        setHostWalletAddresses([...hostWalletAddresses, address]);
+      var { address } = await getWalletDetails();
+      address = await address;
+      if (address) {
+        if (hostWalletAddresses.length > 0)
+          setHostWalletAddresses([...hostWalletAddresses, address]);
+        else
+          setHostWalletAddresses([address]);
+        setWalletStr(address);
+      }
     };
     setHostAddress();
   }, []);
+
+  console.log(hostWalletAddresses)
 
   const fileTypes = ["csv", "json"];
 

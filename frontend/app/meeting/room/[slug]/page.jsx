@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   usePeers,
   useRoom,
+  useAcl,
 } from "@huddle01/react/hooks";
 import Participants from '../../components/meeting/Participants';
 import Controls from '../../components/meeting/Controls';
@@ -12,6 +13,7 @@ import VideoScreen from '../../components/meeting/VideoScreen';
 import { useRouter } from "next/navigation";
 import { useAppUtils } from "@huddle01/react/app-utils";
 import { useEventListener } from "@huddle01/react/hooks";
+import { useMeStore } from '@/app/store/MeetingStore';
 
 const Room = ({ params }) => {
   const { push } = useRouter();
@@ -19,6 +21,10 @@ const Room = ({ params }) => {
   const { peers } = usePeers();
   const [displayNameText, setDisplayNameText] = React.useState("");
   const { setDisplayName } = useAppUtils();
+  const isHost = useMeStore(state => state.isHost);
+  const myPeerId = useMeStore(state => state.myPeerId);
+
+  const { changePeerRole } = useAcl();
 
   useEffect(() => {
     if (!isRoomJoined) {
@@ -33,6 +39,14 @@ const Room = ({ params }) => {
 
   const URL = `${origin}/meeting/room/${params.slug}`;
   console.log(URL)
+
+  useEffect(() => {
+    if (isHost) {
+      changePeerRole(myPeerId, "host");
+    } else {
+      changePeerRole(myPeerId, "listener");
+    }
+  }, [isHost]);
 
   useEventListener("room:peer-joined", ({ peerId, role }) => {
     alert("Guest joint the room");
@@ -51,6 +65,7 @@ const Room = ({ params }) => {
   return (
     <div>
       {error}
+      {isHost && <h1>Host</h1>}
       <h2 className="text-2xl">Room {roomId}</h2>
       <input
         type="text"
