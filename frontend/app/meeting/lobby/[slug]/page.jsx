@@ -19,7 +19,6 @@ import VideoScreen from '../../components/meeting/VideoScreen';
 import Participants from '../../components/meeting/Participants';
 import { useRouter } from "next/navigation";
 import { getMeeting } from '@/app/hooks/MeetApiCalls';
-import { data } from 'autoprefixer';
 
 const MeetLobby = ({ params }) => {
 

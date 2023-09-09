@@ -12,7 +12,6 @@ import VideoScreen from '../../components/meeting/VideoScreen';
 import { useRouter } from "next/navigation";
 import { useAppUtils } from "@huddle01/react/app-utils";
 import { useEventListener } from "@huddle01/react/hooks";
-import { getPeer } from '@/app/hooks/Huddle';
 
 const Room = ({ params }) => {
   const { push } = useRouter();
