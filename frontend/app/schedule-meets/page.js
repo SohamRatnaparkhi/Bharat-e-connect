@@ -1,12 +1,16 @@
-import React from 'react'
-import '../globals.css'
+import React from "react";
+import "../globals.css";
+
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
 
 const ScheduleMeet = () => {
   return (
-    <div className='w-full h-full bg-white' >
-        <h1 className='font-mont font-bold'  >Schedule Meet</h1>
+    <div className="w-full h-full bg-white">
+      <Navbar />
+      <Sidebar />
     </div>
-  )
-}
+  );
+};
 
-export default ScheduleMeet
+export default ScheduleMeet;

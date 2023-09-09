@@ -18,14 +18,16 @@ module.exports = {
       'sec-blue': '#2D31FA',
       'dark-blue': '#051367',
       'light-blue': '#5D8BF4',
+      'sky-blue': '#EDF2FE',
       'light-green': '#95F7B2',
       'slate-1': '#03C5C7',
       'slate-2': '#04DFFC',
     },
-    fontFamily: {
-      'mont': ['Montserrat', 'sans-serif'],
-    },
+    
     extend: {
+      fontFamily: {
+        'mont': ['var(--font-mont)'],
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
