@@ -38,8 +38,8 @@ const Controls = ({ URL }) => {
         shareScreenRef.current.srcObject = null;
         stopProducingAudio();
         stopProducingVideo();
-        if (isAudioPlaying) fetchAudioStream();
-        if (isVideoPlaying) fetchVideoStream();
+        if (isAudioOn) fetchAudioStream();
+        if (isVideoOn) fetchVideoStream();
     }
     useEffect(() => {
         console.log(isMuteOnJoin, isDisableVideoOnJoin)

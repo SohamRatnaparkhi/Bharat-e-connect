@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { Audio, Video, } from "@huddle01/react/components";
 import { useHuddle01 } from '@huddle01/react';
 import { useEventListener } from '@huddle01/react/hooks';
+import Image from 'next/image';
 
 const VideoScreen = ({ peers }) => {
     console.log(peers)

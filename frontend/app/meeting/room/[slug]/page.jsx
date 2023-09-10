@@ -5,6 +5,7 @@ import {
   usePeers,
   useRoom,
   useAcl,
+  useHuddle01,
 } from "@huddle01/react/hooks";
 import Participants from '../../components/meeting/Participants';
 import Controls from '../../components/meeting/Controls';
@@ -13,16 +14,22 @@ import VideoScreen from '../../components/meeting/VideoScreen';
 import { useRouter } from "next/navigation";
 import { useAppUtils } from "@huddle01/react/app-utils";
 import { useEventListener } from "@huddle01/react/hooks";
-import { useMeStore } from '@/app/store/MeetingStore';
+import { useMeStore, useMeetingStore } from '@/app/store/MeetingStore';
 
 const Room = ({ params }) => {
   const { push } = useRouter();
+  const { me } = useHuddle01();
   const { isRoomJoined, error, isLoading, roomId } = useRoom();
   const { peers } = usePeers();
   const [displayNameText, setDisplayNameText] = React.useState("");
   const { setDisplayName } = useAppUtils();
   const isHost = useMeStore(state => state.isHost);
   const myPeerId = useMeStore(state => state.myPeerId);
+  const removePeer = useMeetingStore(state => state.removePeer);
+  const updatePeerName = useMeetingStore(state => state.updatePeerName);
+  const roomPeers = useMeetingStore(state => state.peers);
+  const addPeer = useMeetingStore(state => state.addPeer);
+  const myEthAddress = useMeStore(state => state.myEthAddress);
 
   const { changePeerRole } = useAcl();
 
@@ -44,19 +51,48 @@ const Room = ({ params }) => {
     if (isHost) {
       changePeerRole(myPeerId, "host");
     } else {
-      changePeerRole(myPeerId, "listener");
+      changePeerRole(myPeerId, "speaker");
     }
   }, [isHost]);
 
+  useEffect(() => {
+    if (me.meId == "")
+      return;
+    console.log("use effect adds following data " + displayNameText + " " + myEthAddress + " " + isHost + " " + me.meId)
+    removePeer(me.meId)
+    addPeer({
+      peerId: me.meId,
+      displayName: displayNameText,
+      address: myEthAddress,
+      isHost: isHost,
+    })
+  }, []);
+  console.log("room peers", roomPeers)
   useEventListener("room:peer-joined", ({ peerId, role }) => {
+    addPeer({
+      peerId: peerId,
+      displayName: displayNameText,
+      address: myEthAddress,
+      isHost: isHost,
+    })
     alert("Guest joint the room");
   });
   useEventListener("room:me-left", () => {
+    removePeer(myPeerId);
     push("/meeting");
   });
   useEventListener("room:peer-left", ({ peerId }) => {
+    removePeer(peerId);
     alert("Guest left the room");
   });
+  useEventListener("room:me-name-update", () => {
+    console.log("my name updated")
+    updatePeerName(myPeerId, displayNameText);
+  });
+  useEventListener("room:peer-name-update", ({ peerId }) => {
+    updatePeerName(peerId, displayNameText);
+  });
+
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -77,15 +113,16 @@ const Room = ({ params }) => {
       <Button
         disabled={!setDisplayName.isCallable}
         onClick={() => {
-
-          setDisplayName(displayNameText);
+          console.log("set display name clicked with " + displayNameText + " " + myPeerId + "")
+          updatePeerName(myPeerId, displayNameText);
+          setDisplayName(displayNameText + "," + myEthAddress);
         }}
       >
         {`SET_DISPLAY_NAME`}
       </Button>
+      <Participants peers={peers} />
       <VideoScreen peers={peers} />
       <Controls URL={URL} />
-      <Participants peers={peers} />
     </div>
   )
 }

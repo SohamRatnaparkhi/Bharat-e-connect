@@ -48,14 +48,14 @@ const MeetLobby = ({ params }) => {
 
   const [displayNameText, setDisplayNameText] = React.useState("");
 
-  const meetingPeers = useMeetingStore(state => state.peers);
-  const addPeer = useMeetingStore(state => state.addPeer);
-  const hostAddresses = useMeetingStore(state => state.hostAddresses);
   const addHostAddress = useMeetingStore(state => state.addHostAddress);
   const setIsHost = useMeStore(state => state.setIsHost);
   const setMuteOnJoin = useMeetingStore(state => state.setMuteOnJoin);
   const setDisableVideoOnJoin = useMeetingStore(state => state.setDisableVideoOnJoin);
   const setMyPeerId = useMeStore(state => state.setMyPeerId);
+  const roomId = useMeetingStore(state => state.roomId);
+  const setRoomId = useMeetingStore(state => state.setRoomId);
+  const setMyEthAddress = useMeStore(state => state.setMyEthAddress);
 
   useEffect(() => {
     const setPeerEthAddress = async () => {
@@ -68,12 +68,6 @@ const MeetLobby = ({ params }) => {
   }, [peerAddress]);
 
   const pushPeerToLobby = () => {
-    addPeer({
-      address: peerAddress,
-      displayName: displayNameText,
-      isHost: isPeerHost,
-      peerId: me.meId,
-    })
     if (isPeerHost) {
       setIsHost(true);
       addHostAddress(peerAddress);
@@ -87,9 +81,12 @@ const MeetLobby = ({ params }) => {
 
   const checkLobbyConditions = async () => {
     var { address } = await getWalletDetails();
+    setMyEthAddress(address);
+    setPeerAddress(address);
     const meetDetails = await getMeeting(params.slug);
     console.log(meetDetails)
     const meet = meetDetails.data?.data;
+    setRoomId(meet.roomId);
     console.log(meet.hostAddresses, address)
     if (meet?.meetConfig.audioDisabled)
       setMuteOnJoin(true);
@@ -106,7 +103,8 @@ const MeetLobby = ({ params }) => {
     else if (meet.meetConfig.isPrivate) {
       console.log("private meet")
       const hasSBTBalance = await checkSBTBalance();
-      if (meet.participantAddresses.includes(peerAddress) && hasSBTBalance) {
+      console.log(meet.participantAddresses, address, hasSBTBalance)
+      if (meet.participantAddresses.includes(address) && hasSBTBalance) {
         console.log("allowed")
         setAccessDenied(false);
         pushPeerToLobby();
@@ -147,6 +145,7 @@ const MeetLobby = ({ params }) => {
   const handleMeetStart = () => {
     console.log("is lobby joined", isLobbyJoined)
     if (!isLobbyJoined) return;
+    setMyPeerId(me.meId);
     joinRoom();
   }
 

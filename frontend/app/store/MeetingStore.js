@@ -25,7 +25,7 @@ export const useMeetingStore = create((set) => ({
 
 export const useMeStore = create((set) => ({
     myPeerId: null,
-    setMyPeerId: (peerId) => set({ peerId }),
+    setMyPeerId: (myPeerId) => set({ myPeerId }),
     isMuted: false,
     setIsMuted: (isMuted) => set({ isMuted }),
     isVideoDisabled: false,
@@ -38,4 +38,6 @@ export const useMeStore = create((set) => ({
     setDisplayName: (displayName) => set({ displayName }),
     isHost: false,
     setIsHost: (isHost) => set({ isHost }),
+    myEthAddress: null,
+    setMyEthAddress: (myEthAddress) => set({ myEthAddress }),
 }));
