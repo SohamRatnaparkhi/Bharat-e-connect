@@ -4,7 +4,7 @@ import UserIcon from "../../svg-icons/UserIcon";
 
 const Navbar = () => {
   return (
-    <div className="w-full h-20">
+    <div className="w-full h-10%">
         <div className="flex justify-between items-center h-full px-10">
           <div className="flex items-center text-black text-xl">LOGO</div>
 
