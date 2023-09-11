@@ -25,6 +25,7 @@ const Room = ({ params }) => {
   const { setDisplayName } = useAppUtils();
   const isHost = useMeStore(state => state.isHost);
   const myPeerId = useMeStore(state => state.myPeerId);
+  const displayName = useMeStore(state => state.displayName);
   const removePeer = useMeetingStore(state => state.removePeer);
   const updatePeerName = useMeetingStore(state => state.updatePeerName);
   const roomPeers = useMeetingStore(state => state.peers);
@@ -32,6 +33,13 @@ const Room = ({ params }) => {
   const myEthAddress = useMeStore(state => state.myEthAddress);
 
   const { changePeerRole } = useAcl();
+
+  useEffect(() => {
+    updatePeerName(myPeerId, displayName);
+    setDisplayName(displayName + "," + myEthAddress);
+  }, [displayName, myEthAddress]);
+
+  console.log(`Display Name: ${displayName}`);
 
   useEffect(() => {
     if (!isRoomJoined) {
@@ -114,11 +122,12 @@ const Room = ({ params }) => {
         disabled={!setDisplayName.isCallable}
         onClick={() => {
           console.log("set display name clicked with " + displayNameText + " " + myPeerId + "")
-          updatePeerName(myPeerId, displayNameText);
-          setDisplayName(displayNameText + "," + myEthAddress);
+          // updatePeerName(myPeerId, displayNameText);
+          // setDisplayName(displayNameText + "," + myEthAddress);
         }}
       >
         {`SET_DISPLAY_NAME`}
+        {displayName}
       </Button>
       <Participants peers={peers} />
       <VideoScreen peers={peers} />

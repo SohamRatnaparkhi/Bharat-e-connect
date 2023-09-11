@@ -26,6 +26,7 @@ const VideoScreen = ({ peers }) => {
                             key={peer.peerId}
                             peerId={peer.peerId}
                             track={peer.cam}
+                            debug
                         />
                         Role: {peer.role},
                         Name: {peer.displayName?.split(',')?.[0]}

@@ -44,12 +44,13 @@ const MeetLobby = ({ params }) => {
     error,
   } = useVideo();
   const { joinRoom } = useRoom();
-  const { setDisplayName } = useAppUtils();
+  // const { setDisplayName } = useAppUtils();
 
   const [displayNameText, setDisplayNameText] = React.useState("");
 
   const addHostAddress = useMeetingStore(state => state.addHostAddress);
   const setIsHost = useMeStore(state => state.setIsHost);
+  const setDisplayName = useMeStore(state => state.setDisplayName);
   const setMuteOnJoin = useMeetingStore(state => state.setMuteOnJoin);
   const setDisableVideoOnJoin = useMeetingStore(state => state.setDisableVideoOnJoin);
   const setMyPeerId = useMeStore(state => state.setMyPeerId);
@@ -187,9 +188,10 @@ const MeetLobby = ({ params }) => {
             className="border-2 border-gray-300 text-black h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none mr-2"
           />
           <Button
-            disabled={!setDisplayName.isCallable}
+            // disabled={!setDisplayName.isCallable}
             onClick={() => {
               setDisplayName(displayNameText);
+              console.log(`Lob Display Name: ${displayNameText}`);
             }}
           >
             {`SET_DISPLAY_NAME`}
