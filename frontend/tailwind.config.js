@@ -6,24 +6,6 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    screens: {
-      sm: '480px',
-      md: '768px',
-      lg: '976px',
-      xl: '1440px',
-    },
-    colors: {
-      'black': '#151D1F',
-      'white': '#FFF',
-      'sec-blue': '#2D31FA',
-      'dark-blue': '#051367',
-      'light-blue': '#5D8BF4',
-      'sky-blue': '#EDF2FE',
-      'light-green': '#95F7B2',
-      'slate-1': '#03C5C7',
-      'slate-2': '#04DFFC',
-    },
-    
     extend: {
       fontFamily: {
         'mont': ['var(--font-mont)'],
