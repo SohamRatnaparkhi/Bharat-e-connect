@@ -21,6 +21,12 @@ export const useMeetingStore = create((set) => ({
     setMuteOnJoin: (muteOnJoin) => set({ muteOnJoin }),
     disableVideoOnJoin: null,
     setDisableVideoOnJoin: (disableVideoOnJoin) => set({ disableVideoOnJoin }),
+    isMuteLocked: false,
+    setIsMuteLocked: (isMuteLocked) => set({ isMuteLocked }),
+    isVideoLocked: false,
+    setIsVideoLocked: (isVideoLocked) => set({ isVideoLocked }),
+    isChatLocked: false,
+    setIsChatLocked: (isChatLocked) => set({ isChatLocked }),
 }));
 
 export const useMeStore = create((set) => ({
