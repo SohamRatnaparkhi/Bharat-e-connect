@@ -1,20 +1,12 @@
-import React from "react";
-import "../globals.css";
-
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import Calendar from "./components/Calendar";
+import React from 'react'
+import '../globals.css'
 
 const ScheduleMeet = () => {
   return (
-    <div className="w-full h-full bg-white">
-      <Navbar />
-      <div className="flex flex-row w-full h-90% items-center justify-between">
-        <Sidebar />
-        <Calendar />
-      </div>
+    <div className='w-full h-full bg-white' >
+        <h1 className='font-mont font-bold'  >Schedule Meet</h1>
     </div>
-  );
-};
+  )
+}
 
-export default ScheduleMeet;
+export default ScheduleMeet
