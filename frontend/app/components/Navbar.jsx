@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const Navbar = () => {
 
     return (
@@ -14,8 +15,9 @@ const Navbar = () => {
                     <div className="flex items-center justify-evenly font-[400] text-black Montserrat hover:bg-light-blue rounded-xl hover:px-3 hover:p-2">
                         About Us
                     </div>
-                    <button className="flex items-center justify-evenly text-black font-[600] text-sm border-2 border-white bg-gradient-to-r from-[#5D8BF4] via-[transparent] to-[#FFF] rounded-full p-2 w-40">
-                        Connect Wallet                        
+                    <button className="flex items-center justify-evenly text-black font-[600] text-sm border-2 border-white bg-gradient-to-r from-[#5D8BF4] via-[transparent] to-[#FFF] rounded-full p-2 w-40"
+                        >
+                       Connect wallet                     
                     </button>
 
                 </div>

@@ -47,10 +47,7 @@ export default function Home() {
           </div>
 
         </div>
-        <div className='relative  w-6/12 flex flex-col bg-light-green'>
-          <div className='aboslute bg-sec-blue'>
-            
-          </div>
+        <div className='relative  w-6/12 flex flex-col'>
         </div>
       </div>
     </div>
