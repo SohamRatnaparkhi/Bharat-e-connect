@@ -1,12 +1,15 @@
 import React from 'react'
 
 import { Environment, OrbitControls, Sky } from '@react-three/drei'
+import { VRButton, XR } from '@react-three/xr'
 import { Canvas } from '@react-three/fiber'
+
 import { ConferenceTable } from './ConferenceTable'
 import { SittingSoham } from './Sitting-soham'
+import { SohamR } from './Soham-r-model'
+import { SohamPModel } from './Soham-P-model'
 
 import { positions } from '../positions'
-import { VRButton, XR } from '@react-three/xr'
 
 const VRCanvas = () => {
   return (
@@ -34,7 +37,9 @@ const VRCanvas = () => {
             </mesh> */}
             <ConferenceTable position={[0, 0, 0]} />
             {/* <SittingSoham position={[0, 0.3, -2]} /> */}
-            <SittingSoham position={positions[3]} rotation={[0, Math.PI/2, 0]} />
+            {/* <SittingSoham position={positions[3]} rotation={[0, Math.PI/2, 0]} /> */}
+            <SohamR position={positions[1]} rotation={[0, Math.PI, 0]} />
+            <SohamPModel position={positions[2]} rotation={[0, -Math.PI/2, 0]} />
           </XR>
         </Canvas>
     </div>

@@ -17,7 +17,7 @@ export function SittingSoham(props) {
     actions['sitting-anim'].reset().play();
   }, [actions]);
 
-  console.log(animations);
+  // console.log(animations);
 
   return (
     <group ref={group} {...props} dispose={null}>
