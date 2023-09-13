@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Environment, OrbitControls, Sky } from '@react-three/drei'
+import { CameraControls, Environment, OrbitControls, Sky } from '@react-three/drei'
 import { VRButton, XR } from '@react-three/xr'
 import { Canvas } from '@react-three/fiber'
 
@@ -14,32 +14,31 @@ import { positions } from '../positions'
 const VRCanvas = () => {
   return (
     <div style={{'backgroundColor':'transparent'}}>
-      <VRButton style={{
-        'position': 'absolute',
-        'top': '10px',
-        'width': '20px',
-        'height': '10px'
-      }}/>
+      <VRButton />
         <Canvas style={{'width':'100vw', 'height':'100vh', 'backgroundColor':'transparent'}}>
           <XR>
+            
             <OrbitControls />
             <ambientLight />
             <axesHelper args={[50]} />
             <gridHelper args={[50, 50]} />
+            
 
-            <Environment preset="forest" />
-            <Sky sunPosition={[100, 20, 100]} />
+            <Environment files='environments/sky-mountain.hdr' background blur={0} />
+            {/* <Sky sunPosition={[100, 20, 100]} /> */}
             <hemisphereLight skyColor="#ffffff" groundColor="#000000" intensity={1.0} />
             <pointLight position={[5, 5, 5]} />
             {/* <mesh>
                 <boxGeometry args={[1, 1, 1]} />
                 <meshStandardMaterial color="hotpink" />
             </mesh> */}
-            <ConferenceTable position={[0, 0, 0]} />
-            {/* <SittingSoham position={[0, 0.3, -2]} /> */}
-            {/* <SittingSoham position={positions[3]} rotation={[0, Math.PI/2, 0]} /> */}
-            <SohamR position={positions[1]} rotation={[0, Math.PI, 0]} />
-            <SohamPModel position={positions[2]} rotation={[0, -Math.PI/2, 0]} />
+            <group position={[0, 0, 0]}>
+              <ConferenceTable position={[0, 0, 0]} />
+              {/* <SittingSoham position={[0, 0.3, -2]} /> */}
+              {/* <SittingSoham position={positions[3]} rotation={[0, Math.PI/2, 0]} /> */}
+              <SohamR position={positions[1]} rotation={[0, Math.PI, 0]} />
+              <SohamPModel position={positions[2]} rotation={[0, -Math.PI/2, 0]} />
+            </group>
           </XR>
         </Canvas>
     </div>
