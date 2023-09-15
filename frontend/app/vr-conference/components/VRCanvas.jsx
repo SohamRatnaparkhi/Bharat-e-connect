@@ -24,8 +24,8 @@ const VRCanvas = () => {
             <gridHelper args={[50, 50]} />
             
 
-            <Environment files='environments/sky-mountain.hdr' background blur={0} />
-            {/* <Sky sunPosition={[100, 20, 100]} /> */}
+            {/* <Environment files='environments/sky-mountain.hdr' background blur={0} /> */}
+            <Sky sunPosition={[100, 20, 100]} />
             <hemisphereLight skyColor="#ffffff" groundColor="#000000" intensity={1.0} />
             <pointLight position={[5, 5, 5]} />
             {/* <mesh>
