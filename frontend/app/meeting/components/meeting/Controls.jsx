@@ -8,6 +8,8 @@ import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useEventListener, useRecording } from '@huddle01/react/hooks';
 import { useMeStore, useMeetingStore } from '@/app/store/MeetingStore';
+import 'regenerator-runtime/runtime'
+
 
 const Controls = ({ URL }) => {
     const { push } = useRouter();
@@ -25,6 +27,8 @@ const Controls = ({ URL }) => {
             });
             if (shareScreenRef.current && stream) {
                 shareScreenRef.current.srcObject = stream;
+                stopProducingVideo();
+                stopProducingAudio();
                 produceVideo(stream);
                 produceAudio(stream);
             }

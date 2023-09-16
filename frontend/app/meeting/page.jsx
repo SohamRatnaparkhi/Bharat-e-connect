@@ -1,4 +1,5 @@
 "use client";
+import 'regenerator-runtime/runtime'
 
 import React, { useEffect } from "react";
 import { initHuddle } from "../hooks/Huddle";
