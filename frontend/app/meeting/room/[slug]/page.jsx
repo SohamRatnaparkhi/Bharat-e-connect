@@ -15,6 +15,13 @@ import { useRouter } from "next/navigation";
 import { useAppUtils } from "@huddle01/react/app-utils";
 import { useEventListener } from "@huddle01/react/hooks";
 import { useMeStore, useMeetingStore } from '@/app/store/MeetingStore';
+import GroupChat from '../../components/meeting/GroupChat';
+import Transcript from '../../components/meeting/Captions';
+import 'regenerator-runtime/runtime'
+import Captions from '../../components/meeting/Captions';
+import PrivateChat from '../../components/meeting/PrivateChat';
+import { formatTime } from '../(utils)/TIme';
+;
 
 const Room = ({ params }) => {
   const { push } = useRouter();
@@ -31,6 +38,7 @@ const Room = ({ params }) => {
   const roomPeers = useMeetingStore(state => state.peers);
   const addPeer = useMeetingStore(state => state.addPeer);
   const myEthAddress = useMeStore(state => state.myEthAddress);
+  const addRoomMessage = useMeetingStore(state => state.addRoomMessage);
 
   const { changePeerRole } = useAcl();
 
@@ -53,20 +61,16 @@ const Room = ({ params }) => {
       : '';
 
   const URL = `${origin}/meeting/room/${params.slug}`;
-  console.log(URL)
 
   useEffect(() => {
     if (isHost) {
       changePeerRole(myPeerId, "host");
-    } else {
-      changePeerRole(myPeerId, "speaker");
     }
   }, [isHost]);
 
   useEffect(() => {
     if (me.meId == "")
       return;
-    console.log("use effect adds following data " + displayNameText + " " + myEthAddress + " " + isHost + " " + me.meId)
     removePeer(me.meId)
     addPeer({
       peerId: me.meId,
@@ -100,6 +104,17 @@ const Room = ({ params }) => {
   useEventListener("room:peer-name-update", ({ peerId }) => {
     updatePeerName(peerId, displayNameText);
   });
+  useEventListener("room:data-received", (data) => {
+    console.log("data received")
+    console.log(data)
+    addRoomMessage(
+      {
+        ...data.payload,
+        recipient: me.meId,
+        timeStamp: formatTime(new Date().getTime()),
+      }
+    )
+  })
 
 
   if (isLoading) {
@@ -108,7 +123,6 @@ const Room = ({ params }) => {
 
   return (
     <div>
-      {error}
       {isHost && <h1>Host</h1>}
       <h2 className="text-2xl">Room {roomId}</h2>
       <input
@@ -129,9 +143,12 @@ const Room = ({ params }) => {
         {`SET_DISPLAY_NAME`}
         {displayName}
       </Button>
-      <Participants peers={peers} />
+      <Participants peers={peers} me={me} />
       <VideoScreen peers={peers} />
+      <Captions />
       <Controls URL={URL} />
+      <GroupChat />
+      <PrivateChat peers={peers} me={me} />
     </div>
   )
 }

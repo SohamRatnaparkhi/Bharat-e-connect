@@ -1,4 +1,5 @@
 "use client";
+import 'regenerator-runtime/runtime'
 
 import Button from '@/app/components/Button';
 import { checkSBTBalance, getWalletDetails } from '@/app/hooks/Web3';
@@ -199,7 +200,7 @@ const MeetLobby = ({ params }) => {
         </div>
 
         <div className='relative flex justify-center w-3/6 h-3/6'>
-          {videoOn 
+          {!videoOn 
             ? <div className='-z-2 w-full h-full rounded-[6px] bg-black bg-gradient-to-t from-slate-400 flex justify-center items-center' >
 
             </div>

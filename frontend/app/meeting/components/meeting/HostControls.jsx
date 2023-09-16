@@ -4,6 +4,7 @@ import Button from '@/app/components/Button';
 import React from 'react';
 import { useAcl } from '@huddle01/react/hooks';
 import { useMeetingStore } from '@/app/store/MeetingStore';
+import 'regenerator-runtime/runtime'
 
 const HostControls = () => {
     const { changeRoomControls } = useAcl();

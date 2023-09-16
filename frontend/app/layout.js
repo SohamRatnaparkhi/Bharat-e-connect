@@ -1,4 +1,6 @@
 import './globals.css'
+import 'regenerator-runtime/runtime'
+import "core-js/stable";
 import { Inter } from 'next/font/google'
 
 import { Montserrat } from 'next/font/google'
