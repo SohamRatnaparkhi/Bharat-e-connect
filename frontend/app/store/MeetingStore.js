@@ -27,6 +27,16 @@ export const useMeetingStore = create((set) => ({
     setIsVideoLocked: (isVideoLocked) => set({ isVideoLocked }),
     isChatLocked: false,
     setIsChatLocked: (isChatLocked) => set({ isChatLocked }),
+    roomMessages: [],
+    /*
+    type roomMessage = {
+        sender: string,
+        recipient: string,
+        message: string,
+        timestamp: number,
+    }
+    */
+    addRoomMessage: (roomMessage) => set((state) => ({ roomMessages: [...state.roomMessages, roomMessage] })),
 }));
 
 export const useMeStore = create((set) => ({

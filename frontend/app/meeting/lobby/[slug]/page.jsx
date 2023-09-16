@@ -1,4 +1,5 @@
 "use client";
+import 'regenerator-runtime/runtime'
 
 import Button from '@/app/components/Button';
 import { checkSBTBalance, getWalletDetails } from '@/app/hooks/Web3';
