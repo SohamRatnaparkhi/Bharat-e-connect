@@ -22,6 +22,7 @@ module.exports = {
       'light-green': '#95F7B2',
       'slate-1': '#03C5C7',
       'slate-2': '#04DFFC',
+      'primary-blue': '#000127',
     },
     
     extend: {

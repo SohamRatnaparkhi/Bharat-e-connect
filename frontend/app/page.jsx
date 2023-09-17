@@ -10,7 +10,7 @@ export default function Home() {
 
       {/* <Link href="/schedule"> Create meeting </Link> */}
 
-      <div className="flex flex-row w-full " >
+      <div className="flex flex-row w-full h-screen" >
         <div className="relative  w-6/12 flex flex-col">
           <div className='h-40'>
           </div>
@@ -19,20 +19,25 @@ export default function Home() {
             <div
               className='relative items-center justify-center font-bold text-4xl'
               style={{
-                background: 'linear-gradient(180deg, #2D31FA 0%, #04DFFC 50%)',
+                // background: 'linear-gradient(180deg, #2D31FA 0%, #04DFFC 50%)',
+                background: 'linear-gradient(#2D31FA, #04DFFC)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Join the Future of Communication
+              Join the <br/> Future of<br/> Communication
             </div>
-            <div className='relative items-center justify-center text-black text-2xl Montserrat '>
+            <div className='relative items-center justify-center text-black text-2xl Montserrat'>
               Effortless Video Conferencing
             </div>
 
-            <button className="flex items-center justify-between text-black font-[500] text-sm border-2 border-sec-blue rounded-full m-3 p-4 px-10 space-x-2
+            {/* <button className="flex items-center justify-between text-black font-[500] text-sm border-2 border-sec-blue rounded-full m-3 p-4 px-10 space-x-2
             hover:bg-light-blue hover:text-black hover:border-white">
+              <span>Schedule a meeting</span>
+              <HiOutlineArrowRight />
+            </button> */}
+            <button className="flex items-center justify-between text-black font-[500] text-sm border-white border-black bg-gradient-to-r from-[light-blue] from-50% via-[transparent] to-[#FFF] rounded-full m-3 p-4 px-10 space-x-2">
               <span>Schedule a meeting</span>
               <HiOutlineArrowRight />
             </button>
