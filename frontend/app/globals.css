@@ -23,6 +23,23 @@ body {
   /* background: radial-gradient(circle at top left, #5D8BF436, transparent 40%); */
 }
 
-.bg-gradient {
-  background: radial-gradient(circle at top left, #5D8BF436, white 40%);
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #5D8BF4;
+  border-radius: 5px;
+  width: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
