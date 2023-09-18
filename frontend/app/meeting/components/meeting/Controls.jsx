@@ -16,21 +16,43 @@ const Controls = ({ URL }) => {
     const shareScreenRef = useRef(null);
     const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
     const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
-    const { startRecording, stopRecording, isStarting, inProgress, isStopping, data } = useRecording();
+    const { isStarting, inProgress, isStopping, data } = useRecording();
     const isMuteOnJoin = useMeetingStore(state => state.isMuteOnJoin);
     const isDisableVideoOnJoin = useMeetingStore(state => state.isDisableVideoOnJoin);
+    const recorder = new RecordRTC_Extension();
+    var screenShareStream = null;
+    const startRecording = async () => {
+        if (!recorder) {
+            alert("RecordRTC chrome extension is either disabled or not installed. Install the extension to record the screen")
+        } else {
+            recorder.startRecording({
+                enableScreen: true,
+                enableMicrophone: true,
+                enableSpeakers: true
+            });
+        }
+    }
+    const stopRecording = async () => {
+        recorder.stopRecording(function (blob) {
+            console.log("blob", blob)
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = `recording-${+new Date()}.webm`;
+            link.click();
+        });
+    }
     const enableShareScreen = async () => {
         try {
-            const stream = await navigator.mediaDevices.getDisplayMedia({
+            screenShareStream = await navigator.mediaDevices.getDisplayMedia({
                 video: true,
                 audio: true,
             });
-            if (shareScreenRef.current && stream) {
-                shareScreenRef.current.srcObject = stream;
+            if (shareScreenRef.current && screenShareStream) {
+                shareScreenRef.current.srcObject = screenShareStream;
                 stopProducingVideo();
                 stopProducingAudio();
-                produceVideo(stream);
-                produceAudio(stream);
+                produceVideo(screenShareStream);
+                produceAudio(screenShareStream);
             }
         } catch (error) {
             console.log(error)
@@ -44,6 +66,7 @@ const Controls = ({ URL }) => {
         stopProducingVideo();
         if (isAudioOn) fetchAudioStream();
         if (isVideoOn) fetchVideoStream();
+        screenShareStream = null;
     }
     useEffect(() => {
         console.log(isMuteOnJoin, isDisableVideoOnJoin)
@@ -171,7 +194,9 @@ const Controls = ({ URL }) => {
                     Start Recording
                 </Button>
                 <Button
-                    disabled={!stopRecording.isCallable} onClick={stopRecording}>
+                    // disabled={!stopRecording.isCallable} onClick={stopRecording}
+                    onClick={() => stopRecording()}
+                >
                     Stop Recording
                 </Button>
             </div>
