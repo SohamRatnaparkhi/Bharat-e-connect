@@ -33,6 +33,7 @@ export class UsersController {
   async findOneByEthAddress(@Param('ethAddress') ethAddress: string) {
     return this.usersService.findOne(ethAddress);
   }
+
   @Patch(':id')
   async updateById(
     @Param('id') id: string,
