@@ -10,7 +10,28 @@ module.exports = {
       fontFamily: {
         'mont': ['var(--font-mont)'],
       },
-      
+      fontSize: {
+        '5%': '5%',
+        '10%': '10%',
+        '15%': '15%',
+        '20%': '20%',
+        '25%': '25%',
+        '30%': '30%',
+
+        '70%':'70%',
+        '75%':'75%',
+        '80%':'80%',
+        '85%':'85%',
+        '90%':'90%',
+        '95%':'95%',
+      },
+      flex: {
+        '1': '1 1 30%',
+        '2': '2 2 30%',
+        '3': '3 3 30%',
+        '4': '4 4 30%',
+        '5': '5 5 30%',
+      },     
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',

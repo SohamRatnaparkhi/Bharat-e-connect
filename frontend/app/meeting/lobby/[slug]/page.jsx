@@ -26,6 +26,7 @@ import { useMeetingStore, useMeStore } from '@/app/store/MeetingStore';
 import Navbar from '../../components/lobby-comps/Navbar';
 
 import '../../../globals.css'
+import cn from '@/app/utils/cn';
 
 const MeetLobby = ({ params }) => {
 
@@ -159,7 +160,7 @@ const MeetLobby = ({ params }) => {
     joinRoom();
   }
 
-  if (isLoading) return (<div>...loading</div>)
+  if (isLoading) return (<div><iframe src="https://lottie.host/?file=307fb28b-48a0-477a-8c49-a9ba66f14a79/clHpsh7QES.json"></iframe></div>)
   if (accessDenied) return (<div>Access Denied</div>)
   return (
     <div className='h-full w-full flex flex-col items-center bg-rad-blue-grad-tr-bl'>
@@ -188,7 +189,7 @@ const MeetLobby = ({ params }) => {
             }
           </div>
           <div className='w-10% h-full pt-5 pl-2 flex flex-col justify-start'>
-            <div className='border-[3px] border-black w-[35px] h-[35px] rounded-full flex items-center justify-center text-xl font-semibold'>
+            <div className='border-[3px] border-black w-[35px] h-[35px] rounded-full flex items-center justify-center text-xl font-semibold hove:text-[#EE2A2A]'>
               {/* {isLobbyJoined ? "" : error} */}
                 {isLobbyJoined ?
                   <button disabled={!leaveLobby.isCallable} onClick={leaveLobby}>
@@ -214,28 +215,28 @@ const MeetLobby = ({ params }) => {
             </div>
           }
             {/* Video and mic buttons */}
-            <div className='absolute left-1/3 bottom-3 w-30% h-15% flex flex-row justify-around'>
+            <div className='absolute left-1/3 bottom-3 w-30% h-15% flex flex-row justify-around cursor-pointer'>
               <button
                 disabled={!fetchVideoStream.isCallable}
                 onClick={() => {
                   setVideoOn(!videoOn);
                   console.log(videoOn)
-                  videoOn ? fetchVideoStream() : stopVideoStream();
+                  videoOn ? stopVideoStream(): fetchVideoStream() ;
                 }}
-                className='relative flex justify-center items-center w-[34px] h-[34px] rounded-full bg-[#EE2A2A] text-white'
+                className={cn(videoOn ? 'bg-[#3535358C]':'bg-[#EE2A2A]', 'relative flex justify-center items-center w-[34px] h-[34px] rounded-full text-white')}
               >
-                {videoOn ? <FiVideoOff /> : <FiVideo />}
+                {videoOn ? <FiVideo /> : <FiVideoOff /> }
               </button>
               
               <button
                 disabled={!fetchAudioStream.isCallable}
                 onClick={()=>{
                   setAudioOn(!audioOn);
-                  audioOn ? fetchAudioStream() : stopAudioStream();
+                  audioOn ? stopAudioStream() :fetchAudioStream();
                 }}
-                className='relative flex justify-center items-center w-[34px] h-[34px] rounded-full bg-[#EE2A2A] text-white'
+                className={cn(audioOn ? 'bg-[#3535358C]':'bg-[#EE2A2A]','relative flex justify-center items-center w-[34px] h-[34px] rounded-full text-white')}
               >
-                {audioOn ? <FiMicOff /> : <FiMic />}
+                {audioOn ?  <FiMic />: <FiMicOff />}
               </button>
             </div>
         </div>
