@@ -218,6 +218,7 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
                 <div className="absolute left-2 bottom-2 flex items-center justify-center h-[18px] px-2 py-2 bg-[#3535358C] rounded-[5px] text-[10px] text-white">
                   {peer.displayName?.split(",")?.[0]}{" "}
                 </div>
+                
                 <div className="absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center bg-[#3535358C] rounded-full text-white">
                   <FiMicOff />
                 </div>

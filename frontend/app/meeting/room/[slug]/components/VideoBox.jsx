@@ -24,7 +24,7 @@ const VideoBox = ({ index, videoRef }) => {
   const { me } = useHuddle01();
 
   return (
-    <div className="relative max-h-1/2 h-1/2 flex flex-4 m-1 justify-center items-center p-0 rounded-[8px] drop-shadow-xl border border-1 border-black">
+    <div className="relative flex flex-4 m-1 items-center justify-center rounded-[8px] drop-shadow-xl border border-1 bg-slate-600 border-black">
       <div className="absolute left-2 bottom-2 flex items-center justify-center h-[18px] px-2 py-2 bg-[#3535358C] rounded-[5px] text-[10px] text-white">
         {me.displayName.split(",")[0]}
       </div>
