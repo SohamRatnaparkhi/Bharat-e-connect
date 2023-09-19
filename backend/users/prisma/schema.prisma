@@ -19,7 +19,7 @@ model User {
   password        String
   ethAddress      String     @unique
   contractAddress String     @unique
-  Phonebook       Phonebook?
+  Phonebook       Phonebook[]
   Groups          Groups[]
 }
 
@@ -29,7 +29,7 @@ model Phonebook {
   updatedAt   DateTime @updatedAt
   name        String
   address     String
-  userId      String   @unique 
+  userId      String  
   user        User     @relation(fields: [userId], references: [userId])
 }
 
