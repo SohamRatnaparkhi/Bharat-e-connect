@@ -9,8 +9,9 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Prisma, User } from '@prisma/client';
+import { basePath } from 'constants/Url';
 
-@Controller('users')
+@Controller(basePath + 'users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
