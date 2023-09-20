@@ -67,14 +67,14 @@ const ChatBox = ({ chatBox }) => {
               </div>
             </div>
 
-            <div className="flex flex-col overflow-y-scroll w-90% h-75%">
+            <div className="flex flex-col overflow-y-scroll w-85% h-75%">
               {roomMessages.map((message, index) => {
                 if (message.kind == "group")
                   return (
                     <div
-                      className="w-70% flex flex-col bg-slate-400 p-2 my-2 rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px] rounded-tl-none"
+                      className={cn(message.sender.displayName == me.displayName?"bg-[#5D8BF475] right-1 rounded-tr-none rounded-bl-[12px] rounded-br-[12px] rounded-tl-[12px]":"bg-slate-400 left-1 rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px] rounded-tl-none", "w-95% flex flex-col p-2 my-2 ")}
                       key={index}
-                    >
+                    > {console.log(`me: ${me.displayName === message.sender.displayName}`)}
                       <div className="relative flex flex-row h-10%"> 
                         <div className="text-white text-sm font-semibold">
                           {message.sender.displayName.split(",")[0]}:
@@ -112,12 +112,14 @@ const ChatBox = ({ chatBox }) => {
                     sender: me,
                     message: groupMessage,
                     kind: "group",
+                    timeStamp: formatTime(new Date().getTime()),
                   });
                   addRoomMessage({
                     sender: me,
                     message: groupMessage,
                     kind: "group",
                     receiver: "*",
+                    timeStamp: formatTime(new Date().getTime()),
                   });
                   console.log(
                     "sent group message - ",

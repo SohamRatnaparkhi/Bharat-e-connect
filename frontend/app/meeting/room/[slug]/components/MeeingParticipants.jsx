@@ -171,7 +171,7 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
         ))}
       <div
         className={cn(
-          chatBox ? "w-70%" : "w-95%",
+          chatBox ? "w-70%" : "w-90%",
           "absolute flex flex-col items-center justify-evenly h-95% bottom-0 left-20 cursor-pointer ease-in-out duration-300 grid-cols-1 "
         )}
       >
@@ -208,27 +208,28 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
         </div>
 
         {/* Video blocks */}
-        <div className="relative w-full h-80% max-h-80% border-t-1  flex justify-center flex-wrap gap-3 ">
+        <div className="relative w-full h-80% max-h-80% border-t-1 flex justify-center flex-wrap gap-3 ">
           {/* <video ref={videoRef} autoPlay muted></video> */}
           {/* {[...Array(7)].map((_, index) => <VideoBox index={index} />)} */}
           {Object.values(peers)
-            .filter((peer) => peer.cam)
+            // .filter((peer) => peer.cam)
             .map((peer) => (
-              <div className="relative flex flex-4 m-1 items-center justify-center rounded-[8px] drop-shadow-xl border border-1 bg-slate-600 border-black">
+              <div key={peer.peerId} className="relative flex flex-4 m-1 items-center justify-center rounded-[8px] drop-shadow-xl border border-1 bg-slate-600 border-black">
                 <div className="absolute left-2 bottom-2 flex items-center justify-center h-[18px] px-2 py-2 bg-[#3535358C] rounded-[5px] text-[10px] text-white">
                   {peer.displayName?.split(",")?.[0]}{" "}
                 </div>
+                {console.log(`peer: ${peer.displayName?.split(",")?.[0]}`)};
                 
                 <div className="absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center bg-[#3535358C] rounded-full text-white">
                   <FiMicOff />
                 </div>
-                <Video
+      {          peer.cam && <Video
                   className="h-full max-h-full"
                   key={peer.peerId}
                   peerId={peer.peerId}
                   track={peer.cam}
                   // debug
-                />
+                />}
                 {/* Role: {peer.role},
                         Name: {peer.displayName?.split(',')?.[0]} */}
               </div>
@@ -237,7 +238,7 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
         </div>
 
         <div className="relative flex flex-row justify-center w-full h-10%">
-          <div className="flex flex-row items-center justify-evenly h-full w-20% bg-white ">
+          <div className="flex flex-row items-center justify-evenly h-full w-20%">
             <div
               onClick={() => {
                 setIsVideoPlaying(!isVideoPlaying);

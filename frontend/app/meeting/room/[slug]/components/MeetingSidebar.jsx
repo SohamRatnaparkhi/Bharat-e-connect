@@ -11,6 +11,12 @@ import {
   Moreoptions,
   Chatoption,
   Captionsoption,
+  CaptionsoptionW,
+  ChatoptionW,
+  EmotesW,
+  MoreoptionsW,
+  RecordingW,
+  ScreenshareW,
 } from "@/app/svg-icons/MeetingOptions";
 
 import { useRoom, useVideo, useAudio } from '@huddle01/react/hooks';
@@ -166,7 +172,7 @@ const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording }) =>
           }}
           className={cn(isScreenShareOn ?"bg-[#5D8BF4] text-white":"bg-white","flex items-center justify-center w-[44px] h-[44px] rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white")}
         >
-          <Screenshare />
+          {isScreenShareOn ? <ScreenshareW />: <Screenshare />}
         </div>
         <div
           onClick={() => {
@@ -174,7 +180,7 @@ const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording }) =>
           }}
           className={cn(chatBox ? "bg-[#5D8BF4]": "bg-white", "flex items-center justify-center w-[44px] h-[44px] rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white")}
         >
-          <Chatoption />
+          {chatBox? <ChatoptionW />: <Chatoption />}
         </div>
         <div 
           onClick={() => {
@@ -182,7 +188,7 @@ const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording }) =>
           }}
           className={cn(isRecording ? "bg-[#5D8BF4]": "bg-white", "flex items-center justify-center w-[44px] h-[44px] rounded-full border-[1px] border-[#848486] text-white")}
         >
-          <Recording />
+          {isRecording? <RecordingW />: <Recording />}
         </div>
         <div className="flex items-center justify-center w-[44px] h-[44px] bg-white rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white">
           <Emotes />

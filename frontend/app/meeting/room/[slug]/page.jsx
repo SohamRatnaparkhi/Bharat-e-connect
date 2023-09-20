@@ -90,7 +90,7 @@ const Room = ({ params }) => {
       address: myEthAddress,
       isHost: isHost,
     });
-    alert("Guest joint the room");
+    // alert("Guest joint the room");
   });
   useEventListener("room:me-left", () => {
     removePeer(myPeerId);
@@ -98,7 +98,7 @@ const Room = ({ params }) => {
   });
   useEventListener("room:peer-left", ({ peerId }) => {
     removePeer(peerId);
-    alert("Guest left the room");
+    // alert("Guest left the room");
   });
   useEventListener("room:me-name-update", () => {
     console.log("my name updated");
@@ -113,7 +113,6 @@ const Room = ({ params }) => {
     addRoomMessage({
       ...data.payload,
       recipient: me.meId,
-      timeStamp: formatTime(new Date().getTime()),
     });
   });
 
