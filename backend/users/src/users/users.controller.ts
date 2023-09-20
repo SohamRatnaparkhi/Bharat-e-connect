@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Prisma, User } from '@prisma/client';
+import { basePath } from 'constants/Url';
+import { UserLoginInput } from './types/auth.types';
 
-@Controller('users')
+@Controller(basePath + 'users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -29,9 +31,9 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Get(':ethAddress')
+  @Get('/ethAddress/:ethAddress')
   async findOneByEthAddress(@Param('ethAddress') ethAddress: string) {
-    return this.usersService.findOne(ethAddress);
+    return this.usersService.findOneByEthAddress(ethAddress);
   }
 
   @Patch(':id')
@@ -45,5 +47,10 @@ export class UsersController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Post('/login')
+  async login(@Body() loginUserDto: UserLoginInput) {
+    return this.usersService.login(loginUserDto);
   }
 }
