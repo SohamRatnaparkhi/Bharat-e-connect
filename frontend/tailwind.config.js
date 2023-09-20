@@ -16,6 +16,7 @@ module.exports = {
       'black': '#151D1F',
       'off-black': '#353535',
       'white': '#FFF',
+      'card-color' : '#98BCF424',
       'sec-blue': '#2D31FA',
       'dark-blue': '#051367',
       'light-blue': '#5D8BF4',
@@ -24,6 +25,7 @@ module.exports = {
       'slate-1': '#03C5C7',
       'slate-2': '#04DFFC',
       'primary-blue': '#000127',
+      'footer-blue' : '#000140',
     },
     
     extend: {
@@ -34,6 +36,15 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+          'rad-blue-grad-tl': 'radial-gradient(circle at top left, #5D8BF436, transparent 40%)',
+          'rad-blue-grad-tr': 'radial-gradient(circle at top right, #5D8BF436, transparent 40%)',
+          'rad-blue-grad-bl': 'radial-gradient(circle at bottom left, #5D8BF436, transparent 40%)',
+          'rad-blue-grad-br': 'radial-gradient(circle at bottom right, #5D8BF436, transparent 40%)',
+          'rad-blue-grad-tl-br': 'radial-gradient(circle at top left, #5D8BF436, transparent 40%), radial-gradient(circle at bottom right, #5D8BF436, transparent 40%)',
+          'rad-blue-grad-tr-bl': 'radial-gradient(circle at top right, #5D8BF436, transparent 50%), radial-gradient(circle at bottom left, #5D8BF436, transparent 50%)',
+  
+          'app-logo': 'url(/logos/BharatConnect-logo.png)',
+          'aicte-logo': 'url(/logos/aicte-logo.png)',
       },
       height: {
         '5%': '5%',
