@@ -21,44 +21,64 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    try {
+      return this.prisma.user.findMany();
+    } catch (error) {
+      return error;
+    }
   }
 
   async findOne(id: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: {
-        userId: id,
-      },
-    });
+    try {
+      return this.prisma.user.findUnique({
+        where: {
+          userId: id,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async findOneByEthAddress(ethAddress: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: {
-        ethAddress: ethAddress,
-      },
-    });
+    try {
+      return this.prisma.user.findUnique({
+        where: {
+          ethAddress: ethAddress,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async updateById(id: string, updateUserDto: Prisma.UserUpdateInput) {
-    return this.prisma.user.update({
-      where: {
-        userId: id,
-      },
-      data: updateUserDto,
-    });
+    try {
+      return this.prisma.user.update({
+        where: {
+          userId: id,
+        },
+        data: updateUserDto,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async updateByEthAddress(
     ethAddress: string,
     updateUserDto: Prisma.UserUpdateInput,
   ) {
-    return this.prisma.user.update({
-      where: {
-        ethAddress: ethAddress,
-      },
-      data: updateUserDto,
-    });
+    try {
+      return this.prisma.user.update({
+        where: {
+          ethAddress: ethAddress,
+        },
+        data: updateUserDto,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async remove(id: string) {

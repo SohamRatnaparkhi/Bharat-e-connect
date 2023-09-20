@@ -30,9 +30,9 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Get(':ethAddress')
+  @Get('/ethAddress/:ethAddress')
   async findOneByEthAddress(@Param('ethAddress') ethAddress: string) {
-    return this.usersService.findOne(ethAddress);
+    return this.usersService.findOneByEthAddress(ethAddress);
   }
 
   @Patch(':id')
