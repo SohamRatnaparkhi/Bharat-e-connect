@@ -7,29 +7,45 @@ export class PhonebookService {
   constructor(private prisma: PrismaService) {}
 
   async create(createPhonebookDto: Prisma.PhonebookCreateInput) {
-    return this.prisma.phonebook.create({
-      data: createPhonebookDto,
-    });
+    try {
+      return this.prisma.phonebook.create({
+        data: createPhonebookDto,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async findAll() {
-    return this.prisma.phonebook.findMany();
+    try {
+      return this.prisma.phonebook.findMany();
+    } catch (error) {
+      return error;
+    }
   }
 
   async findOne(id: string) {
-    return this.prisma.phonebook.findUnique({
-      where: {
-        phonebookId: id,
-      },
-    });
+    try {
+      return this.prisma.phonebook.findUnique({
+        where: {
+          phonebookId: id,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async findManyByUserId(userId: string) {
-    return this.prisma.phonebook.findMany({
-      where: {
-        userId: userId,
-      },
-    });
+    try {
+      return this.prisma.phonebook.findMany({
+        where: {
+          userId: userId,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async update(id: string, updatePhonebookDto: Prisma.PhonebookUpdateInput) {
