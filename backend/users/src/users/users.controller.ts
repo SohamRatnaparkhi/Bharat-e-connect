@@ -10,6 +10,7 @@ import {
 import { UsersService } from './users.service';
 import { Prisma, User } from '@prisma/client';
 import { basePath } from 'constants/Url';
+import { UserLoginInput } from './types/auth.types';
 
 @Controller(basePath + 'users')
 export class UsersController {
@@ -46,5 +47,10 @@ export class UsersController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Post('/login')
+  async login(@Body() loginUserDto: UserLoginInput) {
+    return this.usersService.login(loginUserDto);
   }
 }
