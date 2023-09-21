@@ -37,6 +37,8 @@ export const useMeetingStore = create((set) => ({
     }
     */
     addRoomMessage: (roomMessage) => set((state) => ({ roomMessages: [...state.roomMessages, roomMessage] })),
+    screenShareRef1: null,
+    setScreenShareRef1: (screenShareRef1) => set({ screenShareRef1 }),
 }));
 
 export const useMeStore = create((set) => ({
