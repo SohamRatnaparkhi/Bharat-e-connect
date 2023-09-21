@@ -2,7 +2,7 @@ import React from "react";
 import { FiPlusSquare } from "react-icons/fi";
 import Image from "next/image";
 
-const GroupsContacts = () => {
+const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup }) => {
   return (
     <div className="relative flex justify-end w-9/12 h-5/6">
       <div className="flex flex-col justify-between items-center rounded-l-[30px] bg-white w-full border-4 border-[#EDF2FE]">
@@ -18,7 +18,7 @@ const GroupsContacts = () => {
             </div>
 
             <div className="flex flex-row items-center justify-between w-auto gap-5 h-full ">
-              <div className="text-2xl">
+              <div onClick={() => {setAddGroup(!addGroup)}} className="text-2xl hover:text-[#5D8BF4]">
                 {" "}
                 <FiPlusSquare />{" "}
               </div>
@@ -53,7 +53,7 @@ const GroupsContacts = () => {
             </div>
 
             <div className="flex flex-row items-center justify-between w-auto gap-5 h-full ">
-              <div className="text-2xl">
+              <div onClick={() => {setAddContact(!addContact)}} className="text-2xl hover:text-[#5D8BF4]">
                 {" "}
                 <FiPlusSquare />{" "}
               </div>
