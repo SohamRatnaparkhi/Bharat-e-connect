@@ -13,9 +13,9 @@ const PrivateMeet = () => {
   const [muteOnEntry, setMuteOnEntry] = useState(false);
   const [disableVideo, setDisableVideo] = useState(false);
   const [hostWalletAddresses, setHostWalletAddresses] = useState([]);
-  const [walletsStr, setWalletStr] = useState("");
+  const [walletsStr, setWalletStr] = useState();
   const [participantsWalletAddresses, setParticipantsWalletAddresses] = useState([]);
-  const [walletsStrParticipants, setWalletStrParticipants] = useState("");
+  const [walletsStrParticipants, setWalletStrParticipants] = useState();
   const [meetRoomId, setMeetRoomId] = useState("");
 
   useEffect(() => {
@@ -83,9 +83,11 @@ const PrivateMeet = () => {
 
   const handleCreateRoom = async () => {
     const commaSeparatedHosts = walletsStr.split(",");
-    const commaSeparatedParticipants = walletsStrParticipants.split(",");
-    hostWalletAddresses.push(...commaSeparatedHosts);
-    participantsWalletAddresses.push(...commaSeparatedParticipants);
+    const commaSeparatedParticipants = walletsStrParticipants?.split(",");
+    if (commaSeparatedHosts)
+      hostWalletAddresses.push(...commaSeparatedHosts);
+    if (commaSeparatedParticipants)
+      participantsWalletAddresses.push(...commaSeparatedParticipants);
     const meetPresets = {
       meetTitle,
       meetDescription,
