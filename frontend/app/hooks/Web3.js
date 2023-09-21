@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import  contract from "../../contracts/ERC.json";
 
 const getWalletDetails = async () => {
     try {
@@ -27,8 +28,62 @@ const checkSBTBalance = async () => {
     return true;
 }
 
+export const deployContract = async (UserName) => {
+    const { address, signer } = await getWalletDetails();
+    const UserSBT = UserName + "SBT";
+  try {
+    const factory = new ethers.ContractFactory(
+      contract.abi,
+      contract.bytecode,
+      signer
+    );
+    const contractRes = await factory.deploy(UserName, UserSBT);
+    await contractRes.deployed();
+    console.log(contractRes.address);
+    return contractRes;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+export const mintSingleSBT = async (EthAddress, URI, contractAddress) => {
+    const { address, signer } = await getWalletDetails();
+  try {
+    const contractInstance = new ethers.Contract(
+        contractAddress,
+        contract.abi,
+        signer
+    );
+    const transaction = await contractInstance.safeMint(EthAddress, URI);
+    return transaction;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+export const mintMultipleSBT = async (EthAddresses, URI, contractAddress) => {
+    const { address, signer } = await getWalletDetails();
+    
+  try {
+    const contractInstance = new ethers.Contract(
+        contractAddress,
+        contract.abi,
+        signer
+    );
+    const transaction = await contractInstance.safeMintOneToMany(EthAddresses, URI);
+    return transaction;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
 
 export {
     getWalletDetails,
     checkSBTBalance,
+    deployContract,
+    mintMultipleSBT,
+    mintSingleSBT 
 }
