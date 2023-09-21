@@ -1,6 +1,23 @@
-"use client";
+import React, {useEffect} from "react";
 
-import React, { useEffect } from 'react'
+import cn from "@/app/utils/cn";
+
+import { FiLogOut } from "react-icons/fi";
+import { BiCaptions } from "react-icons/bi";
+import {
+  Screenshare,
+  Recording,
+  Emotes,
+  Moreoptions,
+  Chatoption,
+  Captionsoption,
+  CaptionsoptionW,
+  ChatoptionW,
+  EmotesW,
+  MoreoptionsW,
+  RecordingW,
+  ScreenshareW,
+} from "@/app/svg-icons/MeetingOptions";
 
 import { useRoom, useVideo, useAudio } from '@huddle01/react/hooks';
 import Button from '@/app/components/Button';
@@ -11,9 +28,11 @@ import { useMeStore, useMeetingStore } from '@/app/store/MeetingStore';
 import 'regenerator-runtime/runtime'
 
 
-const Controls = ({ URL }) => {
-    const { push } = useRouter();
+const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording }) => {
+
+  const { push } = useRouter();
     const shareScreenRef = useRef(null);
+    const [isScreenShareOn, setIsScreenShareOn] = React.useState(false);
     const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
     const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
     const { isStarting, inProgress, isStopping, data } = useRecording();
@@ -132,93 +151,59 @@ const Controls = ({ URL }) => {
         await startRecording(URL);
     }
 
-    return (
-        <div>
-            {error}
-            <div className="flex gap-4 flex-wrap">
-                <Button
-                    disabled={isAudioOn}
-                    onClick={() => {
-                        fetchAudioStream()
-                        setIsAudioPlaying(true)
-                    }}
-                >
-                    Start Mic (Un-mute)
-                </Button>
-                <Button
-                    disabled={isVideoOn}
-                    onClick={() => {
-                        fetchVideoStream()
-                        setIsVideoPlaying(true)
-                    }}
-                >
-                    Start Camera
-                </Button>
+  return (
+    <div className="absolute left-0 flex flex-col items-center justify-between w-5% h-full bg-slate-50 cursor-pointer">
+      <div className="relative w-20 h-20 flex flex-col justify-center items-center text-2xl rotate-180 text-[#EE2A2A]">
+        <FiLogOut />
+      </div>
 
-                <Button
-                    disabled={!isAudioOn}
-                    onClick={() => {
-                        stopAudioStream()
-                        setIsAudioPlaying(false)
-                    }}
-                >
-                    Stop Mic (Mute)
-                </Button>
-
-                <Button
-                    disabled={!isVideoOn}
-                    onClick={() => {
-                        stopVideoStream()
-                        setIsVideoPlaying(false)
-                    }}
-                >
-                    Stop Camera
-                </Button>
-                <Button disabled={!leaveRoom.isCallable} onClick={() => {
-                    leaveRoom();
-                    push('/schedule/')
-                }}>
-                    LEAVE_ROOM
-                </Button>
-
-                <Button onClick={() => enableShareScreen()}>
-                    Share Screen
-                </Button>
-                <Button onClick={() => disableScreenShare()}>
-                    Stop Sharing Screen
-                </Button>
-                <Button
-                    // disabled={!startRecording.isCallable}
-                    onClick={() => handleRecordStart()}
-                >
-                    Start Recording
-                </Button>
-                <Button
-                    // disabled={!stopRecording.isCallable} onClick={stopRecording}
-                    onClick={() => stopRecording()}
-                >
-                    Stop Recording
-                </Button>
-            </div>
-            <div>
-                REcording details
-                <br />
-                {JSON.stringify(data)}
-                {isStarting}
-                {inProgress}
-                {isStopping}
-            </div>
-            <div>
-                {shareScreenRef && <video
-                    ref={shareScreenRef}
-                    muted
-                    autoPlay
-                    style={{ width: "100%" }}
-                    className="bg-base-300"
-                />}
-            </div>
+      <div className="relative h-3/6 w-full flex flex-col items-center justify-evenly">
+        <div className={cn( "flex items-center justify-center w-[44px] h-[44px] bg-white rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white")}>
+          <Captionsoption />
         </div>
-    )
-}
+        <div
+          onClick={() => {
+            setIsScreenShareOn(!isScreenShareOn);
+            if (!isScreenShareOn) {
+              enableShareScreen();
+            } else {
+              disableScreenShare();
+            }
+          }}
+          className={cn(isScreenShareOn ?"bg-[#5D8BF4] text-white":"bg-white","flex items-center justify-center w-[44px] h-[44px] rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white")}
+        >
+          {isScreenShareOn ? <ScreenshareW />: <Screenshare />}
+        </div>
+        <div
+          onClick={() => {
+            setChatBox(!chatBox);
+          }}
+          className={cn(chatBox ? "bg-[#5D8BF4]": "bg-white", "flex items-center justify-center w-[44px] h-[44px] rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white")}
+        >
+          {chatBox? <ChatoptionW />: <Chatoption />}
+        </div>
+        <div 
+          onClick={() => {
+            setIsRecording(!isRecording);
+          }}
+          className={cn(isRecording ? "bg-[#5D8BF4]": "bg-white", "flex items-center justify-center w-[44px] h-[44px] rounded-full border-[1px] border-[#848486] text-white")}
+        >
+          {isRecording? <RecordingW />: <Recording />}
+        </div>
+        <div className="flex items-center justify-center w-[44px] h-[44px] bg-white rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white">
+          <Emotes />
+        </div>
+        <div className="flex items-center justify-center w-[44px] h-[44px] bg-white rounded-full border-[1px] border-[#848486] active:bg-[#5D8BF4] text-white">
+          <Moreoptions />
+        </div>
+      </div>
 
-export default Controls
+      <div className="relative flex flex-col items-center justify-center gap-3 h-1/5 w-full ">
+        <div className="relative h-[44px] w-[44px] rounded-full bg-black"></div>
+        <div className="text-sm">Log out</div>
+      </div>
+    </div>
+  );
+};
+
+export default MeetingSidebar;

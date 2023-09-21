@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { UserLoginInput } from './types/auth.types';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,14 @@ export class UsersService {
       const password = createUserDto.password;
       const hashedPassword = await bcrypt.hash(password, 10);
       createUserDto.password = hashedPassword;
+      const checkUser = await this.prisma.user.findUnique({
+        where: {
+          ethAddress: createUserDto.ethAddress,
+        },
+      });
+      if (checkUser) {
+        return checkUser;
+      }
       return this.prisma.user.create({
         data: createUserDto,
       });
@@ -21,44 +30,64 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    try {
+      return this.prisma.user.findMany();
+    } catch (error) {
+      return error;
+    }
   }
 
   async findOne(id: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: {
-        userId: id,
-      },
-    });
+    try {
+      return this.prisma.user.findUnique({
+        where: {
+          userId: id,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async findOneByEthAddress(ethAddress: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: {
-        ethAddress: ethAddress,
-      },
-    });
+    try {
+      return this.prisma.user.findUnique({
+        where: {
+          ethAddress: ethAddress,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async updateById(id: string, updateUserDto: Prisma.UserUpdateInput) {
-    return this.prisma.user.update({
-      where: {
-        userId: id,
-      },
-      data: updateUserDto,
-    });
+    try {
+      return this.prisma.user.update({
+        where: {
+          userId: id,
+        },
+        data: updateUserDto,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async updateByEthAddress(
     ethAddress: string,
     updateUserDto: Prisma.UserUpdateInput,
   ) {
-    return this.prisma.user.update({
-      where: {
-        ethAddress: ethAddress,
-      },
-      data: updateUserDto,
-    });
+    try {
+      return this.prisma.user.update({
+        where: {
+          ethAddress: ethAddress,
+        },
+        data: updateUserDto,
+      });
+    } catch (error) {
+      return error;
+    }
   }
 
   async remove(id: string) {
@@ -67,5 +96,23 @@ export class UsersService {
         userId: id,
       },
     });
+  }
+
+  async login(loginUserDto: UserLoginInput) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          ethAddress: loginUserDto.ethAddress,
+        },
+      });
+      const check = await bcrypt.compare(loginUserDto.password, user?.password);
+      if (user && check) {
+        return user;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return error;
+    }
   }
 }
