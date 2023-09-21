@@ -43,6 +43,7 @@ const Room = ({ params }) => {
 
   const [chatBox, setChatBox] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isScreenShareOn, setIsScreenShareOn] = React.useState(false);
 
   const { changePeerRole } = useAcl();
 
@@ -113,29 +114,45 @@ const Room = ({ params }) => {
     addRoomMessage({
       ...data.payload,
       recipient: me.meId,
+      timeStamp: formatTime(new Date().getTime()),
     });
   });
 
   if (isLoading) {
-    return <div><iframe src="https://lottie.host/?file=307fb28b-48a0-477a-8c49-a9ba66f14a79/clHpsh7QES.json"></iframe></div>;
+    return (
+      <div>
+        <iframe src="https://lottie.host/?file=307fb28b-48a0-477a-8c49-a9ba66f14a79/clHpsh7QES.json"></iframe>
+      </div>
+    );
   }
 
   return (
     <div className=" h-screen w-screen overflow-hidden">
       <div className="flex flex-col items-center h-screen w-screen overflow-hidden">
         {/* Sidebar */}
-        <MeetingSidebar chatBox={chatBox} setChatBox={setChatBox} isRecording={isRecording} setIsRecording={setIsRecording} />
+        <MeetingSidebar
+          chatBox={chatBox}
+          setChatBox={setChatBox}
+          isRecording={isRecording}
+          setIsRecording={setIsRecording}
+          isScreenShareOn={isScreenShareOn}
+          setIsScreenShareOn={setIsScreenShareOn}
+        />
 
         {/* Navbar */}
         <div className="absolute w-95% h-5% bg-white top-0 right-0"></div>
 
         {/* Videos Screen */}
-        <MeetingParticipants peers={peers} chatBox={chatBox} isRecording={isRecording} displayName={displayName} />
-        
+        <MeetingParticipants
+          peers={peers}
+          chatBox={chatBox}
+          isRecording={isRecording}
+          displayName={displayName}
+          isScreenShareOn={isScreenShareOn}
+        />
 
         {/* Chat */}
-        <ChatBox chatBox={chatBox} />
-
+        <ChatBox chatBox={chatBox} peers={peers} />
       </div>
 
       {/* {isHost && <h1>Host</h1>}

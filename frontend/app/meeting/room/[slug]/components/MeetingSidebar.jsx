@@ -28,20 +28,23 @@ import { useMeStore, useMeetingStore } from '@/app/store/MeetingStore';
 import 'regenerator-runtime/runtime'
 
 
-const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording }) => {
+const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording, isScreenShareOn, setIsScreenShareOn }) => {
 
   const { push } = useRouter();
     const shareScreenRef = useRef(null);
-    const [isScreenShareOn, setIsScreenShareOn] = React.useState(false);
+
     const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
     const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
     const { isStarting, inProgress, isStopping, data } = useRecording();
     const isMuteOnJoin = useMeetingStore(state => state.isMuteOnJoin);
     const isDisableVideoOnJoin = useMeetingStore(state => state.isDisableVideoOnJoin);
-    // const recorder = new RecordRTC_Extension();
+    const screenShareRef1 = useMeetingStore(state => state.screenShareRef1);
+    const setShareScreenRef1 = useMeetingStore(state => state.setShareScreenRef1);
     var screenShareStream = null;
-    const startRecording = async () => {
-        if (!recorder) {
+    try{
+      const startRecording = async () => {
+      const recorder = new RecordRTC_Extension();
+      if (recorder==undefined || recorder==null) {
             alert("RecordRTC chrome extension is either disabled or not installed. Install the extension to record the screen")
         } else {
             recorder.startRecording({
@@ -50,7 +53,10 @@ const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording }) =>
                 enableSpeakers: true
             });
         }
-    }
+        }
+      }catch(e){
+        clg(e);
+      }
     const stopRecording = async () => {
         recorder.stopRecording(function (blob) {
             console.log("blob", blob)
@@ -72,6 +78,8 @@ const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording }) =>
                 stopProducingAudio();
                 produceVideo(screenShareStream);
                 produceAudio(screenShareStream);
+                setShareScreenRef1(screenShareRef1);
+                console.log(screenShareStream)
             }
         } catch (error) {
             console.log(error)
