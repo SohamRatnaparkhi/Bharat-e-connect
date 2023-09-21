@@ -1,9 +1,10 @@
 "use client";
-import React from 'react'
-import '../../globals.css'
+import React, { useState } from 'react'
+// import '../../globals.css'
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import ReCAPTCHA from "react-google-recaptcha";
+import axios from 'axios';
 
 const Login = () => {
   
@@ -11,7 +12,21 @@ const Login = () => {
     console.log("Captcha value:", value);
   }
   
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [ethAddress, setEthAddress] = useState("");
+
+  const handleLogin = async () => {
+    console.log(email, password, ethAddress)
+    const { data } = await axios.post('/api/nest/users/login', {
+      email,
+      password,
+      ethAddress
+    });
+    console.log(data);
+  }
+
+  console.log(`email: ${email}, password: ${password}, ethAddress: ${ethAddress}`)
   return (
     <main className="h-screen grid place-content-center bg-white">
 
@@ -21,7 +36,7 @@ const Login = () => {
 
         <div className=" p-6 border-r-2">
               <div className="mr-20">
-                <img src='../logos/logo.svg' className="h-full" />
+                <img src='../logos/Logo.svg' className="h-full" />
               </div>
         </div>
 
@@ -39,15 +54,15 @@ const Login = () => {
                       autoComplete="off"
                     ></Box>
                   <div className="py-3 w-11/12">
-                  <TextField variant="outlined" type="email" fullWidth label="Email" required size='small' name="email"/>
+                  <TextField variant="outlined" type="email" fullWidth label="Email" required size='small' name="email" onClick={(e) => setEmail(e.target.value)}/>
                     </div> 
                  
                   <div className="py-3 w-11/12">
-                  <TextField variant="outlined" type="password" fullWidth label="Password" required size='small' name="password"/>
+                  <TextField variant="outlined" type="password" fullWidth label="Password" required size='small' name="password" onClick={(e) => setPassword(e.target.value)} />
                   </div>
 
                   <div className="py-3 w-11/12">
-                  <TextField variant="outlined" type="password" fullWidth label="Ethereun Address" required size='small' name="ethereum"/>
+                  <TextField variant="outlined" type="address" fullWidth label="Ethereum Address" required size='small' name="ethereum" onClick={(e) => setEthAddress(e.target.value)} />
                   </div>
 
                   <div className="mt-8">
@@ -55,7 +70,7 @@ const Login = () => {
                   </div>
 
                   <div className="w-11/12 mt-12   flex justify-center">
-                    <button type="button" className="p-2 w-6/12 rounded-lg border-2 bg-[#5D8BF4] text-white">Login</button>
+                    <button type="button" className="p-2 w-6/12 rounded-lg border-2 bg-[#5D8BF4] text-white" onClick={handleLogin}>Login</button>
                   </div>
                   
                   <div className="w-11/12 mt-7 flex justify-center text-sm">
