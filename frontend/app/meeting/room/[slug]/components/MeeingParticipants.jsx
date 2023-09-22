@@ -24,7 +24,7 @@ import cn from "@/app/utils/cn";
 import VideoBox from "./VideoBox";
 // import { is } from "core-js/core/object";
 
-const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
+const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScreenShareOn }) => {
   // console.log(peers)
   const { me } = useHuddle01();
   const videoRef = useRef();
@@ -38,14 +38,18 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
   });
 
   const { push } = useRouter();
-  const shareScreenRef = useRef(null);
+  let shareScreenRef = useRef(null);
   const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
+  // const [currentShareScreenRef, setCurrentShareScreenRef] = React.useState(null);
+ 
   const { isStarting, inProgress, isStopping, data } = useRecording();
   const isMuteOnJoin = useMeetingStore((state) => state.isMuteOnJoin);
   const isDisableVideoOnJoin = useMeetingStore(
     (state) => state.isDisableVideoOnJoin
   );
+  const shareScreenRef1 = useMeetingStore((state) => state.shareScreenRef1);
+  
   // const recorder = new RecordRTC_Extension();
   var screenShareStream = null;
   const startRecording = async () => {
@@ -116,6 +120,11 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
       if (isVideoPlaying) fetchVideoStream();
     }
   }, [shareScreenRef.current]);
+
+  useEffect(() => {
+    shareScreenRef = shareScreenRef1;
+  }, [shareScreenRef1]);
+
   const {
     produceAudio,
     stopProducingAudio,
@@ -208,7 +217,16 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
         </div>
 
         {/* Video blocks */}
-        <div className="relative w-full h-80% max-h-80% border-t-1 flex justify-center flex-wrap gap-3 ">
+        <div className={cn(isScreenShareOn ? "overflow-x-scroll": "overflow-hidden", "relative w-full h-80% max-h-80% border-t-1 flex justify-center flex-wrap gap-3 ease-in-out duration-300 ")}>
+            <div className={cn(isScreenShareOn ? "w-full h-full": "w-0 h-0")}>
+                {shareScreenRef && <video
+                    ref={shareScreenRef}
+                    muted
+                    autoPlay
+                    style={{ width: "100%" }}
+                    className="bg-base-300"
+                />}
+            </div>
           {/* <video ref={videoRef} autoPlay muted></video> */}
           {/* {[...Array(7)].map((_, index) => <VideoBox index={index} />)} */}
           {Object.values(peers)
@@ -218,12 +236,13 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
                 <div className="absolute left-2 bottom-2 flex items-center justify-center h-[18px] px-2 py-2 bg-[#3535358C] rounded-[5px] text-[10px] text-white">
                   {peer.displayName?.split(",")?.[0]}{" "}
                 </div>
-                {console.log(`peer: ${peer.displayName?.split(",")?.[0]}`)};
+                <div className="text-3xl">{peer.displayName?.split(",")?.[0].substring(0, 2)}</div>
+
                 
                 <div className="absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center bg-[#3535358C] rounded-full text-white">
                   <FiMicOff />
                 </div>
-      {          peer.cam && <Video
+                { peer.cam && <Video
                   className="h-full max-h-full"
                   key={peer.peerId}
                   peerId={peer.peerId}
