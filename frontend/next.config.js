@@ -12,7 +12,7 @@ const nextConfig = {
             fallback: [
                 {
                     source: "/api/nest/:path*",
-                    destination: process.env.NEXT_PUBLIC_BACKEND_URL || 'https://industries-adapted-grande-architecture.trycloudflare.com/' + "/api/v1/:path*",
+                    destination: process.env.NEXT_PUBLIC_BACKEND_URL || 'https://industries-adapted-grande-architecture.trycloudflare.com' + "/api/v1/:path*",
                 }]
         };
     },
