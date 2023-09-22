@@ -71,7 +71,9 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup, phone
                 <div className="flex flex-col items-center w-90% h-90% gap-5 max-h-[235px] overflow-y-scroll">
                   
                   {phonebookData
-                    ?.map((contact) => {
+                    ?.map((contact, index) => {
+
+                      if(index%2==1){
                       return(
                     <div className="flex flex-row items-center justify-start gap-5 w-90% h-30% ">
                     <div className="h-[50px] w-[50px] rounded-full bg-red-300 text-xl text-white text-center flex items-center justify-center">{contact?.name?.substring(0, 2)}</div>
@@ -82,6 +84,7 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup, phone
                       <div className="text-[12px] text-[#777777]">Chairman</div>
                     </div>
                   </div>);
+                      }
                  })}
 
                 </div>
@@ -91,7 +94,8 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup, phone
                 <div className="flex flex-col items-center w-90% h-90% gap-5 max-h-[235px] bg-white overflow-y-scroll">
                 
                 {phonebookData
-                    ?.map((contact) => {
+                    ?.map((contact, index) => {
+                      if(index%2==0){
                       return(
                     <div className="flex flex-row items-center justify-start gap-5 w-90% h-30% ">
                     <div className="h-[50px] w-[50px] rounded-full bg-red-300 text-xl text-white text-center flex items-center justify-center">{contact?.name?.substring(0, 2)}</div>
@@ -102,6 +106,7 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup, phone
                       <div className="text-[12px] text-[#777777]">Chairman</div>
                     </div>
                   </div>);
+                      }
                  })}
                  
                 </div>

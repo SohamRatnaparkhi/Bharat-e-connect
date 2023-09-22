@@ -14,6 +14,8 @@ async function createMeeting(request) {
                 disableVideo,
                 hostWalletAddresses,
                 participantsWalletAddresses,
+                date,
+                startTime,
             } = await request.json();
             const res = await fetch(
                 CREATE_MEET_ROOM_URL,
@@ -34,6 +36,7 @@ async function createMeeting(request) {
             );
             // insert meeting into database
             const response = await res.json();
+            console.log(`Date: ${date} startTime: ${startTime}`)
             const newMeeting = await prisma.meeting.create({
                 data: {
                     hostAddresses: hostWalletAddresses,
@@ -47,6 +50,8 @@ async function createMeeting(request) {
                         videoDisabled: disableVideo,
                         isPrivate: isPrivate,
                         audioDisabled: muteOnEntry,
+                        date: date,
+                        startTime: startTime,
                     }
                 },
             });
@@ -67,6 +72,43 @@ async function createMeeting(request) {
     }
 }
 
+const getAllMeetings = async (request) => {
+    try {
+        if (request.method === 'PATCH') {
+            const body = await request.json();
+            const myMeetings = await prisma.meeting.findMany({
+                where: {
+                    hostAddresses: {
+                        has: body.address
+                    }
+                }
+            });
+            
+            const myMeetings2 = await prisma.meeting.findMany({
+                where: {
+                    participantAddresses: {
+                        has: body.address
+                    }
+                }
+            });
+
+            // const meetings = await prisma.meeting.findMany();
+            return NextResponse.json({
+                status: 200,
+                data:  [...myMeetings, ...myMeetings2]
+            });
+        } else {
+            return NextResponse.error('Method not allowed', 405);
+        }
+    } catch (error) {
+        return NextResponse.json({
+            status: 500,
+            error: error.message,
+        });
+    }
+}
+
 export {
     createMeeting as POST,
+    getAllMeetings as PATCH,
 }

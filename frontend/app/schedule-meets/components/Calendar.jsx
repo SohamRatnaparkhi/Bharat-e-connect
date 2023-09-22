@@ -1,10 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 
 import NextIcon from "@/app/svg-icons/NextIcon";
 import PrevIcon from "@/app/svg-icons/PrevIcon";
 import { months, generateDate } from "@/app/utils/calendar";
+import { getMeeting } from "@/app/hooks/MeetApiCalls";
+
+import axios from "axios";
+
 
 import cn from "@/app/utils/cn";
 
@@ -13,6 +17,20 @@ const Calendar = () => {
   const currentDate = dayjs();
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
+
+  useEffect(() => {
+    const getMeets = async () => {
+      const { data } = await axios.patch('/api/meetings', {
+        "address":"0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc"
+      })
+      console.log(data);
+    }
+
+    getMeets();
+  }, [])
+
+
+
 
   return (
     <div className="relative flex justify-end w-9/12 h-5/6">
