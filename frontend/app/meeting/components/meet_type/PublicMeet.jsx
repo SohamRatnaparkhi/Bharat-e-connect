@@ -2,12 +2,16 @@
 
 import Button from '@/app/components/Button';
 import { createMeeting } from '@/app/hooks/MeetApiCalls';
+import { useGetStore } from '@/app/hooks/Store';
+import { useAppStore } from '@/app/store/AppStore';
 import React from 'react'
 
 const PublicMeet = () => {
     const [meetTitle, setMeetTitle] = React.useState("General Meeting");
     const [meetDescription, setMeetDescription] = React.useState("No description");
     const [roomId, setMeetRoomId] = React.useState("");
+    // const user = useAppStore(state => state.user);
+    const user = useGetStore(useAppStore, (state) => state.user);
     const handleCreateRoom = async () => {
         const meetPresets = {
             meetTitle,
@@ -52,6 +56,9 @@ const PublicMeet = () => {
                         <pre>Meeting URL: {`${window.location.origin}/meeting/lobby/${roomId}`}</pre>
                     </div>
                 )
+            }
+            {
+                JSON.stringify(user)
             }
         </div>
     )
