@@ -2,12 +2,13 @@ import React from "react";
 import { FiPlusSquare } from "react-icons/fi";
 import Image from "next/image";
 
-const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup }) => {
+const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup, phonebookData }) => {
+  console.log(phonebookData)
   return (
     <div className="relative flex justify-end w-9/12 h-5/6">
       <div className="flex flex-col justify-between items-center rounded-l-[30px] bg-white w-full border-4 border-[#EDF2FE]">
         <div className="flex flex-col w-90%  h-1/2">
-          <div className="relative flex flex-row items-center justify-between w-90% h-20% m-4 border-b-[1px] border-[#dddddd]">
+          <div className="relative flex flex-row items-center justify-between w-90% h-20% m-4 border-b-[1px] border-[#dddddd] cursor-pointer">
             <div className="flex flex-row gap-4">
               <div className="font-semibold text-lg">Groups</div>
               <input
@@ -18,7 +19,7 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup }) => 
             </div>
 
             <div className="flex flex-row items-center justify-between w-auto gap-5 h-full ">
-              <div onClick={() => {setAddGroup(!addGroup)}} className="text-2xl hover:text-[#5D8BF4]">
+              <div onClick={() => {setAddGroup(!addGroup)}} className="text-2xl hover:text-[#5D8BF4] ease-in-out duration-200">
                 {" "}
                 <FiPlusSquare />{" "}
               </div>
@@ -42,7 +43,7 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup }) => 
         </div>
 
         <div className="flex flex-col w-90% h-1/2 ">
-          <div className="flex flex-row items-center justify-between w-90% h-20% m-4 border-b-[1px] border-[#dddddd]">
+          <div className="flex flex-row items-center justify-between w-90% h-20% m-4 pb-2 border-b-[1px] border-[#dddddd] cursor-pointer">
             <div className="flex flex-row gap-4">
               <div className="font-semibold text-lg">Contacts</div>
               <input
@@ -53,7 +54,7 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup }) => 
             </div>
 
             <div className="flex flex-row items-center justify-between w-auto gap-5 h-full ">
-              <div onClick={() => {setAddContact(!addContact)}} className="text-2xl hover:text-[#5D8BF4]">
+              <div onClick={() => {setAddContact(!addContact)}} className="text-2xl hover:text-[#5D8BF4] ease-in-out duration-200">
                 {" "}
                 <FiPlusSquare />{" "}
               </div>
@@ -66,31 +67,43 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup }) => 
 
           <div className="relative flex flex-row items-center justify-between w-full h-80%">
             <div className="grid grid-cols-2 h-full w-full">
-              <div className="flex flex-col items-center  w-full h-95% border-r-[1px] border-[#aaaaaa]">
-                <div className="flex flex-col items-center w-90% h-full bg-white overflow-y-scroll">
-                  <div className="flex flex-row items-center justify-start gap-5 w-90% h-30% ">
-                    <div className="h-[50px] w-[50px] rounded-full bg-red-300"></div>
+              <div className="flex flex-col items-center  w-full h-80% border-r-[1px] border-[#aaaaaa]">
+                <div className="flex flex-col items-center w-90% h-90% gap-5 max-h-[235px] overflow-y-scroll">
+                  
+                  {phonebookData
+                    ?.map((contact) => {
+                      return(
+                    <div className="flex flex-row items-center justify-start gap-5 w-90% h-30% ">
+                    <div className="h-[50px] w-[50px] rounded-full bg-red-300 text-xl text-white text-center flex items-center justify-center">{contact?.name?.substring(0, 2)}</div>
                     <div className="flex flex-col justify-evenly p-3 w-70% h-full bg-white ">
                       <div className="text-sm font-semibold ">
-                        Soham Panchal
+                        {contact.name}
                       </div>
                       <div className="text-[12px] text-[#777777]">Chairman</div>
                     </div>
-                  </div>
+                  </div>);
+                 })}
+
                 </div>
               </div>
 
-              <div className="flex flex-col items-center  w-full h-95%">
-                <div className="flex flex-col items-center w-90% h-full bg-white overflow-y-scroll">
-                  <div className="flex flex-row items-center justify-start gap-5 w-90% h-30% ">
-                    <div className="h-[50px] w-[50px] rounded-full bg-red-300"></div>
+              <div className="flex flex-col items-center  w-full h-80%">
+                <div className="flex flex-col items-center w-90% h-90% gap-5 max-h-[235px] bg-white overflow-y-scroll">
+                
+                {phonebookData
+                    ?.map((contact) => {
+                      return(
+                    <div className="flex flex-row items-center justify-start gap-5 w-90% h-30% ">
+                    <div className="h-[50px] w-[50px] rounded-full bg-red-300 text-xl text-white text-center flex items-center justify-center">{contact?.name?.substring(0, 2)}</div>
                     <div className="flex flex-col justify-evenly p-3 w-70% h-full bg-white ">
                       <div className="text-sm font-semibold ">
-                        Soham Panchal
+                        {contact.name}
                       </div>
                       <div className="text-[12px] text-[#777777]">Chairman</div>
                     </div>
-                  </div>
+                  </div>);
+                 })}
+                 
                 </div>
               </div>
             </div>

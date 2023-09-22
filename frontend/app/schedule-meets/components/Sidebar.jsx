@@ -8,6 +8,7 @@ const Sidebar = () => {
             <div className='relative h-3/5 flex flex-col justify-evenly items-center'>
                 <div className='relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont text-black active:text-white hover:px-3 ease-in-out duration-300 active:bg-[#5D8BF4]'>Profile</div>
                 <div className='relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont text-black active:text-white hover:px-3 ease-in-out duration-300 active:bg-[#5D8BF4]'>Meeting</div>
+                <div className='relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont text-black active:text-white hover:px-3 ease-in-out duration-300 active:bg-[#5D8BF4]'>Phonebook</div>
                 <div className='relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont text-black active:text-white hover:px-3 ease-in-out duration-300 active:bg-[#5D8BF4]'>Recordings</div>
                 <div className='relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont text-black active:text-white hover:px-3 ease-in-out duration-300 active:bg-[#5D8BF4]'>Files</div>
             </div>

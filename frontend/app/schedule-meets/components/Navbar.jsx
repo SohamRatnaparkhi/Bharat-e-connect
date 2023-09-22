@@ -8,8 +8,8 @@ const Navbar = () => {
     <div className="w-full h-10%">
         <div className="flex justify-between items-center h-full px-10">
           <div className="flex items-center text-black text-xl gap-8">
-            <Image src='/logos/aicte-logo.png' width={50} height={50} />
-            <Image src='/logos/BharatConnect-logo.png' width={100} height={80} />
+            <Image src='/logos/aicte-logo.png' width={50} height={50} alt='AICTE' />
+            <Image src='/logos/BharatConnect-logo.png' width={100} height={80} alt='Bharat E Connect' />
     
           </div>
 
