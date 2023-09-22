@@ -39,6 +39,28 @@ export const useMeetingStore = create((set) => ({
     addRoomMessage: (roomMessage) => set((state) => ({ roomMessages: [...state.roomMessages, roomMessage] })),
     screenShareRef1: null,
     setScreenShareRef1: (screenShareRef1) => set({ screenShareRef1 }),
+    roomPeerRoles: [],
+    /**
+    {
+        role: [peerId1, peerId2, ...]
+    }
+     */
+    addPeerToRole: (role, peerId) => set((state) => {
+        const newRoomPeerRoles = { ...state.roomPeerRoles };
+        if (!newRoomPeerRoles[role]) {
+            newRoomPeerRoles[role] = [];
+        }
+        newRoomPeerRoles[role].push(peerId);
+        return { roomPeerRoles: newRoomPeerRoles };
+    }),
+    removePeerFromRole: (role, peerId) => set((state) => {
+        const newRoomPeerRoles = { ...state.roomPeerRoles };
+        if (!newRoomPeerRoles[role]) {
+            newRoomPeerRoles[role] = [];
+        }
+        newRoomPeerRoles[role] = newRoomPeerRoles[role].filter((id) => id !== peerId);
+        return { roomPeerRoles: newRoomPeerRoles };
+    }),
 }));
 
 export const useMeStore = create((set) => ({
