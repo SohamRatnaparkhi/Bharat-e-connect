@@ -2,26 +2,14 @@ import { ethers } from "ethers";
 import  contract from "../../contracts/ERC.json";
 
 const getWalletDetails = async () => {
-    try {
-        if (!window.ethereum)
-            return { address: "", signer: null, provider: null };
+  if (!window.ethereum)
+    return { address : null, signer : null, provider : null };
 
-        const web3Provider = new ethers.BrowserProvider(window.ethereum)
-        const signer = await web3Provider.getSigner();
-        const address = await signer.getAddress();
-        return { address, signer, web3Provider };
-    } catch (error) {
-        const permissions = await window.ethereum.request({
-            method: "wallet_requestPermissions",
-            params: [{ eth_accounts: {} }],
-        });
-        if (permissions) {
-            const address = permissions[0].caveats[0].value;
-            return { address, signer: null, provider: null };
-        } else {
-            return { address: "", signer: null, provider: null };
-        }
-    }
+  await window.ethereum.send("eth_requestAccounts");
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const address = await signer.getAddress();
+  return { address, signer, provider };
 };
 
 const checkSBTBalance = async () => {
@@ -32,6 +20,7 @@ const deployContract = async (UserName) => {
     const { address, signer } = await getWalletDetails();
     const UserSBT = UserName + "SBT";
   try {
+    console.log(contract)
     const factory = new ethers.ContractFactory(
       contract.abi,
       contract.bytecode,
@@ -43,6 +32,7 @@ const deployContract = async (UserName) => {
     return contractRes;
   } catch (error) {
     console.log(error);
+    console.log(error)
     throw new Error(error);
   }
 };

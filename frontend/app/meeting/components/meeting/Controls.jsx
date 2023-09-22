@@ -19,7 +19,7 @@ const Controls = ({ URL }) => {
     const { isStarting, inProgress, isStopping, data } = useRecording();
     const isMuteOnJoin = useMeetingStore(state => state.isMuteOnJoin);
     const isDisableVideoOnJoin = useMeetingStore(state => state.isDisableVideoOnJoin);
-    // const recorder = new RecordRTC_Extension();
+    const recorder = new RecordRTC_Extension();
     var screenShareStream = null;
     const startRecording = async () => {
         if (!recorder) {

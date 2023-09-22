@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 import { useAppStore } from '../store/AppStore';
+import { deployContract } from '../hooks/Web3';
 
 const Signup = () => {
   const [email, setEmail] = React.useState("");
@@ -15,14 +16,17 @@ const Signup = () => {
   const setLogin = useAppStore(state => state.setLogin)
   const setUser = useAppStore(state => state.setUser)
   const handleSignup = async () => {
+    const contract = await deployContract('abc def');
+    console.log(contract.address ?? 'no address')
     const { data } = await axios.post('/api/nest/users/', {
       email,
       name: username,
       ethAddress,
-      contractAddress: "",
+      contractAddress: contract.address,
       password,
     });
     if (data?.ethAddress) {
+
       setLogin(true)
       setUser(data)
       alert("Signup successful")
