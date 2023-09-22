@@ -34,6 +34,15 @@ export default function Home() {
           <img src="img/meet.png" className="w-full max-w-full mt-4 md:mt-0" alt="Meeting" />
         </div>
       </div>
+
+      {/* <div class="h-0 w-0 border-t-[25px] border-l-[55px] border-b-[25px]  border-solid border-t-transparent border-b-transparent border-l-[#555]">
+      </div> */}
+    
+
+  
+
+
+
       <div className='text-center justify-center m-10'>
         <div className='items-center text-[600] font-bold text-xl md:text-5xl' style={{
           background: 'linear-gradient(#2D31FA, #04DFFC)',
@@ -52,25 +61,25 @@ export default function Home() {
       </div>
 
 
-    
-      
+
+
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-         
+
           <div className="bg-card-color shadow-md p-8">
             <h2 className="text-xl font-semibold  px-4 text-black">Secure Data Sharing</h2>
             <p className='p-4 text-black'>The platform can enable secure and controlled data sharing among AICTE, technical institutions, and other stakeholders. This can include sharing of research data, academic records, and reports while maintaining data privacy and security.</p>
           </div>
 
-          
+
           <div className="bg-card-color shadow-md p-8">
             <h2 className="text-xl font-semibold px-4">International Collaboration</h2>
             <p className='p-4'>AICTE can use online meetings to establish and maintain collaborations with international educational institutions and organizations.</p>
           </div>
 
-         
-          <div className="bg-card-color shadow-md p-8">
-            <h2 className="text-xl font-semibold  px-4">Immutable Record Keeping</h2>
+
+          <div className="bg-card-color p-4 shadow-md p-8">
+            <h2 className="text-xl font-semibold font-[600] px-4">Immutable Record Keeping</h2>
             <p className='p-4'>Meetings, decisions, and actions taken by AICTE committees and officials can be recorded on the blockchain. This creates an immutable and transparent record of all activities, making it easier to track and audit processes.</p>
           </div>
         </div>
