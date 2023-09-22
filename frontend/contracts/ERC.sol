@@ -26,11 +26,24 @@ contract ERC is ERC721, ERC721URIStorage, Ownable {
         userName = _userName;
     }
 
-    function safeMint(address to, string memory uri) public {
+    function safeMint(address to, string memory uri) external onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+    }
+
+    function safeMintManyToMany(
+        address[] memory tos,
+        string memory uris
+    ) external onlyOwner {
+        uint i = 0;
+        for (i; i < tos.length; i++) {
+            uint256 tokenId = _tokenIdCounter.current();
+            _tokenIdCounter.increment();
+            _safeMint(tos[i], tokenId);
+            _setTokenURI(tokenId, uris);
+        }
     }
 
     function burn(uint256 tokenId) external {
