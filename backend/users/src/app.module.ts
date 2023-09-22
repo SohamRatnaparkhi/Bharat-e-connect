@@ -13,7 +13,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     PrismaModule,
     PhonebookModule,
     CacheModule.register({
-      ttl: 60 * 1000, // in ms
+      ttl: 10 * 1000, // in ms
     }),
   ],
   controllers: [AppController],

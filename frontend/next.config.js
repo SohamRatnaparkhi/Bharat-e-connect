@@ -6,13 +6,13 @@ const nextConfig = {
             beforeFiles: [
                 {
                     source: "/api/nest/:path*",
-                    destination: process.env.NEXT_PUBLIC_BACKEND_URL + "api/v1/:path*",
+                    destination: "http://localhost:5000/api/v1/:path*",
                 },
             ],
             fallback: [
                 {
                     source: "/api/nest/:path*",
-                    destination: process.env.NEXT_PUBLIC_BACKEND_URL || 'https://industries-adapted-grande-architecture.trycloudflare.com' + "api/v1/:path*",
+                    destination: "http://localhost:5000/api/v1/:path*",
                 }]
         };
     },
