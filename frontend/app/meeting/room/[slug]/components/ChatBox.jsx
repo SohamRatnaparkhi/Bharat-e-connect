@@ -18,27 +18,44 @@ const ChatBox = ({ chatBox, peers }) => {
   const { sendData } = useAppUtils();
   const roomMessages = useMeetingStore((state) => state.roomMessages);
   const addRoomMessage = useMeetingStore((state) => state.addRoomMessage);
-
+  const addPeerToRole = useMeetingStore((state) => state.addPeerToRole);
+  const removePeerFromRole = useMeetingStore((state) => state.removePeerFromRole);
+  const roomPeerRoles = useMeetingStore((state) => state.roomPeerRoles);
   const [privateMode, setPrivateMode] = React.useState(false);
-  const [talkTo, setTalkTo] = React.useState("");
+  const [talkTo, setTalkTo] = React.useState("*");
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      if (groupMessage == "") return console.log("Empty message");
-
-      sendData("*", {
+      if (groupMessage == "") {
+        return console.log("Empty message");
+      }
+      console.log("message", {
         sender: me,
         message: groupMessage,
-        kind: "group",
+        kind: talkTo == '*' ? "group" : "private",
+        receiver: talkTo == '*' ? "*" : talkTo,
+        timeStamp: formatTime(new Date().getTime()),
+      });
+      const peerIdsToSend = talkTo == "*" ? "*" : [talkTo]
+      sendData(peerIdsToSend, {
+        sender: me,
+        message: groupMessage,
+        kind: talkTo == '*' ? "group" : "private",
+        receiver: talkTo == '*' ? "*" : talkTo,
+        timeStamp: formatTime(new Date().getTime()),
       });
       addRoomMessage({
         sender: me,
         message: groupMessage,
-        kind: "group",
-        receiver: "*",
+        kind: talkTo == '*' ? "group" : "private",
+        receiver: talkTo == '*' ? "*" : talkTo,
         timeStamp: formatTime(new Date().getTime()),
       });
-      console.log("sent group message - ", groupMessage, " - to all peers");
+      console.log(
+        "sent group message - ",
+        groupMessage,
+        " - to ", peerIdsToSend
+      );
       setGroupMessage("");
     }
   };
@@ -71,18 +88,19 @@ const ChatBox = ({ chatBox, peers }) => {
                 )}
                 onClick={() => {
                   setPrivateMode(false);
+                  setTalkTo("*");
                 }}
               >
                 Groups
               </div>
             </div>
-            {console.log(`peers: ${JSON.stringify(peers)}`)}
+            {/* {console.log(`peers: ${JSON.stringify(peers)}`)} */}
             {console.log(`TalkTo: ${talkTo}`)}
 
             {/* contacts */}
             <div
               className={cn(
-                privateMode && talkTo === "" ? "w-85% h-75%" : "w-0 h-0",
+                privateMode && talkTo === "*" ? "w-85% h-75%" : "w-0 h-0",
                 "flex flex-col items-center overflow-y-scroll  bg-white rounded-[6px] ease-in-out duration-300 cursor-pointer"
               )}
             >
@@ -96,7 +114,14 @@ const ChatBox = ({ chatBox, peers }) => {
                     >
                       <div>{peer.displayName?.split(",")?.[0]}</div>
                     </div>
-                    <div className="rounded-full p-2 active:bg-[#eeeeee]">
+                    <div className="rounded-full p-2 active:bg-[#eeeeee]" onClick={
+                      () => {
+                        const role = prompt("Enter role name");
+                        if (role) {
+                          addPeerToRole(role, peer.peerId);
+                        }
+                      }
+                    }>
                       <AiOutlineUsergroupAdd />{" "}
                     </div>
                   </div>
@@ -107,13 +132,13 @@ const ChatBox = ({ chatBox, peers }) => {
             {/* Individual messages */}
             <div
               className={cn(
-                privateMode && talkTo !== "" ? "w-85% h-75%" : "w-0 h-0",
+                privateMode && talkTo !== "*" ? "w-85% h-75%" : "w-0 h-0",
                 "relative flex flex-col overflow-y-scroll ease-in-out duration-300 text-[#5D8BF4]"
               )}
             >
               <div
                 onClick={() => {
-                  setTalkTo("");
+                  setTalkTo("*");
                 }}
                 className="absolute left-1 top-1 rounded-full bg-[#808080]"
               >
@@ -122,6 +147,47 @@ const ChatBox = ({ chatBox, peers }) => {
               <div className="text-[#5D8BF4] text-center">
                 {console.log(peers.peerId?.displayName?.split(",")?.[0])}
                 {peers[talkTo]?.displayName?.split(",")?.[0]}
+                <div>
+                  {
+                    roomMessages.filter(
+                      (message) =>
+                        message.sender?.meId == talkTo || message.receiver == talkTo
+                    ).length > 0
+                      ? roomMessages
+                        .filter(
+                          (message) =>
+                            message.sender?.meId == talkTo || message.receiver == talkTo
+                        )
+                        .map((message, index) => {
+                          if (message.kind == "private")
+                            return (
+                              <div
+                                className={cn(
+                                  message.sender.displayName ==
+                                    me.displayName
+                                    ? "bg-[#5D8BF475] right-1 rounded-tr-none rounded-bl-[12px] rounded-br-[12px] rounded-tl-[12px]"
+                                    : "bg-slate-400 left-1 rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px] rounded-tl-none",
+                                  "w-95% flex flex-col p-2 my-2 "
+                                )}
+                                key={index}
+                              >
+                                <div className="relative flex flex-row justify-between h-10%">
+                                  <div className="text-white text-sm font-semibold">
+                                    {message.sender.displayName.split(",")[0]}:
+                                  </div>
+                                  <div className="text-[12px] font-semibold text-white">
+                                    {/* {console.log(`TimeStamp: ${JSON.stringify(message)}`)} */}
+                                    {/* {message?.timeStamp} */}
+                                  </div>
+                                </div>
+                                <div className="relative mt-3 text-black">{message.message}</div>
+                              </div>
+                            );
+                        }
+                        )
+                      : "No messages yet"
+                  }
+                </div>
               </div>
             </div>
 
@@ -153,11 +219,11 @@ const ChatBox = ({ chatBox, peers }) => {
                           {message.sender.displayName.split(",")[0]}:
                         </div>
                         <div className="text-[12px] font-semibold text-white">
-                          {console.log(`TimeStamp: ${JSON.stringify(message)}`)}
-                          {message?.timeStamp}
+                          {/* {console.log(`TimeStamp: ${JSON.stringify(message)}`)} */}
+                          {/* {message?.timeStamp} */}
                         </div>
                       </div>
-                      <div className="relative mt-3">{message.message}</div>
+                      <div className="relative mt-3 text-black">{message.message}</div>
                     </div>
                   );
               })}
@@ -181,28 +247,71 @@ const ChatBox = ({ chatBox, peers }) => {
                   if (groupMessage == "") {
                     return console.log("Empty message");
                   }
-
-                  sendData("*", {
+                  console.log("message", {
                     sender: me,
                     message: groupMessage,
-                    kind: "group",
+                    kind: talkTo == '*' ? "group" : "private",
+                    receiver: talkTo == '*' ? "*" : talkTo,
+                    timeStamp: formatTime(new Date().getTime()),
+                  });
+                  const peerIdsToSend = talkTo == "*" ? "*" : [talkTo]
+                  sendData(peerIdsToSend, {
+                    sender: me,
+                    message: groupMessage,
+                    kind: talkTo == '*' ? "group" : "private",
+                    receiver: talkTo == '*' ? "*" : talkTo,
                     timeStamp: formatTime(new Date().getTime()),
                   });
                   addRoomMessage({
                     sender: me,
                     message: groupMessage,
-                    kind: "group",
-                    receiver: "*",
+                    kind: talkTo == '*' ? "group" : "private",
+                    receiver: talkTo == '*' ? "*" : talkTo,
                     timeStamp: formatTime(new Date().getTime()),
                   });
                   console.log(
                     "sent group message - ",
                     groupMessage,
-                    " - to all peers"
+                    " - to ", peerIdsToSend
                   );
                   setGroupMessage("");
                 }}
               >
+                <SendMessage />
+              </div>
+              <div
+                className="flex items-center justify-center w-1/6 h-80% bg-[#5D8BF4] rounded-[5px] cursor-pointer active:h-70% ease-in-out duration-300"
+                onClick={() => {
+                  const role = prompt("Enter role to send")
+                  if (role) {
+                    const peerIdsToSend = roomPeerRoles[role]
+                    console.log(roomPeerRoles)
+                    peerIdsToSend.forEach(peerId => {
+                      if (peerId) {
+                        sendData([peerId], {
+                          sender: me,
+                          message: groupMessage,
+                          kind: "private",
+                          receiver: peerId,
+                          timeStamp: formatTime(new Date().getTime()),
+                        });
+                        addRoomMessage([peerId], {
+                          sender: me,
+                          message: groupMessage,
+                          kind: "private",
+                          receiver: peerId,
+                          timeStamp: formatTime(new Date().getTime()),
+                        });
+                        console.log(
+                          "sent group message - ",
+                          groupMessage,
+                          " - to ", peerIdsToSend
+                        );
+                        setGroupMessage("");
+                      }
+                    })
+                  }
+                }}>
                 <SendMessage />
               </div>
             </div>

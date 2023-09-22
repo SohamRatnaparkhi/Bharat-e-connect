@@ -23,11 +23,16 @@ import { RecordingIndicator } from "@/app/svg-icons/MeetingOptions";
 import cn from "@/app/utils/cn";
 import VideoBox from "./VideoBox";
 // import { is } from "core-js/core/object";
+import { useAppUtils } from "@huddle01/react/app-utils";
 
-const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScreenShareOn }) => {
+
+const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
   // console.log(peers)
   const { me } = useHuddle01();
   const videoRef = useRef();
+  const [isScreenShareOn, setIsScreenShareOn] = React.useState(false);
+  const [screenSharingPeerId, setScreenSharingPeerId] = React.useState(null);
+  const [screenSharingPeer, setScreenSharingPeer] = React.useState(null);
   useEventListener("app:cam-on", (camStream) => {
     if (camStream && videoRef.current) {
       videoRef.current.srcObject = camStream;
@@ -36,20 +41,37 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScree
   useEventListener("app:cam-off", () => {
     videoRef.current.srcObject = null;
   });
+  useEventListener("room:data-received", (data) => {
+    if (data.payload.kind != "screen-share") {
+      return;
+    }
+    const { message } = data.payload;
+    if (message == "screen-share-started") {
+      setScreenSharingPeerId(data.payload.senderId);
+      alert("screen share started by " + screenSharingPeerId)
+      console.log(peers)
+      setScreenSharingPeer(peers[screenSharingPeerId])
+      console.log(screenSharingPeerId)
+    } else if (message == "screen-share-stopped") {
+      setScreenSharingPeerId(null);
+    }
+    // alert(JSON.stringify(JSON.stringify(message)));
+  })
 
+  const { sendData } = useAppUtils();
   const { push } = useRouter();
   let shareScreenRef = useRef(null);
   const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = React.useState(false);
   // const [currentShareScreenRef, setCurrentShareScreenRef] = React.useState(null);
- 
+
   const { isStarting, inProgress, isStopping, data } = useRecording();
   const isMuteOnJoin = useMeetingStore((state) => state.isMuteOnJoin);
   const isDisableVideoOnJoin = useMeetingStore(
     (state) => state.isDisableVideoOnJoin
   );
   const shareScreenRef1 = useMeetingStore((state) => state.shareScreenRef1);
-  
+
   // const recorder = new RecordRTC_Extension();
   var screenShareStream = null;
   const startRecording = async () => {
@@ -86,12 +108,19 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScree
         stopProducingAudio();
         produceVideo(screenShareStream);
         produceAudio(screenShareStream);
+        setIsScreenShareOn(true);
+        sendData("*", {
+          kind: "screen-share",
+          message: "screen-share-started",
+          senderId: me.meId
+        })
       }
     } catch (error) {
       console.log(error);
     }
   };
   const disableScreenShare = () => {
+    setIsScreenShareOn(false);
     let tracks = shareScreenRef.current.srcObject.getTracks();
     tracks.forEach((track) => track.stop());
     shareScreenRef.current.srcObject = null;
@@ -100,6 +129,12 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScree
     if (isAudioOn) fetchAudioStream();
     if (isVideoOn) fetchVideoStream();
     screenShareStream = null;
+
+    sendData("*", {
+      kind: "screen-share",
+      message: "screen-share-stopped",
+      senderId: me.meId
+    })
   };
   useEffect(() => {
     console.log(isMuteOnJoin, isDisableVideoOnJoin);
@@ -200,33 +235,42 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScree
 
           {/* New guest joins */}
           <div className="flex flex-row items-center justify-evenly h-full w-3/5 ">
-            <div className="px-1">Someone wants to join the meet:</div>
+            {/* <div className="px-1">Someone wants to join the meet:</div> */}
             <div className="flex flex-row items-center gap-3 justify-evenly">
               <div className="w-[25px] h-[25px] rounded-full bg-red-800 "></div>
-              <div className="text-lg font-semibold">Prof. J.M Joshi</div>
+              <div className="text-lg font-semibold">{me.displayName.split(',')[0]}</div>
             </div>
-            <div className="flex flex-row items-center justify-evenly py-1 h-1/2 w-30% bg-white">
+            {/* <div className="flex flex-row items-center justify-evenly py-1 h-1/2 w-30% bg-white">
               <div className="flex items-center justify-center h-full w-2/5 active:bg-[#5D8BF4] rounded-[5px]  active:text-white text-sm font-semibold">
                 Accept
               </div>
               <div className="flex items-center justify-center h-full w-2/5 active:bg-[#5D8BF4] rounded-[5px]  active:text-white text-sm font-semibold">
                 Reject
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
         {/* Video blocks */}
-        <div className={cn(isScreenShareOn ? "overflow-x-scroll": "overflow-hidden", "relative w-full h-80% max-h-80% border-t-1 flex justify-center flex-wrap gap-3 ease-in-out duration-300 ")}>
-            <div className={cn(isScreenShareOn ? "w-full h-full": "w-0 h-0")}>
-                {shareScreenRef && <video
-                    ref={shareScreenRef}
-                    muted
-                    autoPlay
-                    style={{ width: "100%" }}
-                    className="bg-base-300"
-                />}
-            </div>
+        <div className={cn(isScreenShareOn ? "overflow-x-scroll" : "overflow-hidden", "relative w-full h-80% max-h-80% border-t-1 flex justify-center flex-wrap gap-3 ease-in-out duration-300 ")}>
+          <div className={cn(isScreenShareOn ? "w-full h-full" : "w-0 h-0")}>
+            {shareScreenRef && <video
+              ref={shareScreenRef}
+              muted
+              autoPlay
+              style={{ width: "100%" }}
+              className="bg-base-300"
+            />}
+          </div>
+          {
+            screenSharingPeerId != null && peers[screenSharingPeerId]?.cam && <Video
+              className="h-80%"
+              key={screenSharingPeerId}
+              peerId={screenSharingPeerId}
+              track={peers[screenSharingPeerId].cam}
+            // debug
+            />
+          }
           {/* <video ref={videoRef} autoPlay muted></video> */}
           {/* {[...Array(7)].map((_, index) => <VideoBox index={index} />)} */}
           {Object.values(peers)
@@ -238,16 +282,16 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScree
                 </div>
                 <div className="text-3xl">{peer.displayName?.split(",")?.[0].substring(0, 2)}</div>
 
-                
+
                 <div className="absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center bg-[#3535358C] rounded-full text-white">
                   <FiMicOff />
                 </div>
-                { peer.cam && <Video
+                {peer.cam && <Video
                   className="h-full max-h-full"
                   key={peer.peerId}
                   peerId={peer.peerId}
                   track={peer.cam}
-                  // debug
+                // debug
                 />}
                 {/* Role: {peer.role},
                         Name: {peer.displayName?.split(',')?.[0]} */}
@@ -293,6 +337,13 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName, isScree
             >
               {isAudioPlaying ? <FiMic /> : <FiMicOff />}
             </div>
+            <div onClick={enableShareScreen}>
+              Share screen
+            </div>
+            <div onClick={disableScreenShare}>
+              Stop sharing screen
+            </div>
+
           </div>
         </div>
       </div>
