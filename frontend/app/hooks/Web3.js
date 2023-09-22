@@ -28,7 +28,7 @@ const checkSBTBalance = async () => {
     return true;
 }
 
-export const deployContract = async (UserName) => {
+const deployContract = async (UserName) => {
     const { address, signer } = await getWalletDetails();
     const UserSBT = UserName + "SBT";
   try {
@@ -47,7 +47,7 @@ export const deployContract = async (UserName) => {
   }
 };
 
-export const mintSingleSBT = async (EthAddress, URI, contractAddress) => {
+const mintSingleSBT = async (EthAddress, URI, contractAddress) => {
     const { address, signer } = await getWalletDetails();
   try {
     const contractInstance = new ethers.Contract(
@@ -63,7 +63,7 @@ export const mintSingleSBT = async (EthAddress, URI, contractAddress) => {
   }
 };
 
-export const mintMultipleSBT = async (EthAddresses, URI, contractAddress) => {
+const mintMultipleSBT = async (EthAddresses, URI, contractAddress) => {
     const { address, signer } = await getWalletDetails();
     
   try {
