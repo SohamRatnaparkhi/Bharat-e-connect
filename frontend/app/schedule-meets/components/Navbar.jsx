@@ -17,12 +17,10 @@ const Navbar = () => {
               <div className="flex items-center justify-evenly font-semi-bold text-light-blue text-sm border-2 border-black rounded-full p-1 w-40 hover:drop-shadow-[0_20px_20px_rgba(93, 139, 244, 1)]">
                 <span className="text-xl">+</span> <span>Create Meet</span>
               </div>
-
               <div className="flex items-center">
                 <UserIcon />
               </div>
             </div>
-
         </div>
       </div>
   )

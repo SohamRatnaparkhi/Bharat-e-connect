@@ -1,9 +1,11 @@
 "use client";
 import React, { useState } from 'react'
 // import '../../globals.css'
+// import '../../globals.css'
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import ReCAPTCHA from "react-google-recaptcha";
+
 import axios from 'axios';
 
 const Login = () => {
@@ -17,16 +19,15 @@ const Login = () => {
   const [ethAddress, setEthAddress] = useState("");
 
   const handleLogin = async () => {
-    console.log(email, password, ethAddress)
-    const { data } = await axios.post('/api/nest/users/login', {
-      email,
-      password,
-      ethAddress
-    });
-    console.log(data);
+    fetch('api/nest/users')
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log(data)
+      })
   }
-
-  console.log(`email: ${email}, password: ${password}, ethAddress: ${ethAddress}`)
+  
   return (
     <main className="h-screen grid place-content-center bg-white">
 

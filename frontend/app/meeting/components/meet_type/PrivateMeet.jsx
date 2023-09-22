@@ -4,6 +4,7 @@ import Button from '@/app/components/Button';
 import { parseFile } from '@/app/hooks/FileManagement';
 import { createMeeting } from '@/app/hooks/MeetApiCalls';
 import { getWalletDetails } from '@/app/hooks/Web3';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { FileUploader } from 'react-drag-drop-files';
 
