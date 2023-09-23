@@ -16,25 +16,26 @@ const Phonebook = () => {
   const [phonebookData, setPhonebookData] = useState([]);
 
   useEffect(() => {
-    fetch("api/nest/phonebook/")
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setPhonebookData(data);
-      });
+    // fetch("api/phonebook/")
+    //   .then((res) => {
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     setPhonebookData(data);
+    //   });
     const getData = async () => {
       const { data } = await axios.get("/api/nest/users/");
       setPhonebookData(data);
     };
+    getData();
   }, []);
-
+  console.log(phonebookData)
   const addContactHandler = async (name, address, userId) => {
     const response = await axios
-      .post("/api/nest/phonebook/", {
+      .post("/api/phonebook/", {
         name: name,
         address: address,
-        userId: "userID100%",
+        userId: 'clmqll67z0001i0887xh2yn8l',
       })
       .then((res) => {
         return console.log(res.json());
