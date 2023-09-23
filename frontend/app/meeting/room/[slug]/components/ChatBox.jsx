@@ -229,7 +229,7 @@ const ChatBox = ({ chatBox, peers }) => {
               })}
             </div>
 
-            <div className="relative flex flex-row items-center justify-evenly w-90% h-10% rounded-[5px] bg-white">
+            <div className="relative flex flex-row items-center justify-evenly w-90% h-10% gap-2 rounded-[5px] bg-white">
               <input
                 type="text"
                 placeholder="Type your message"
@@ -242,7 +242,7 @@ const ChatBox = ({ chatBox, peers }) => {
                 <FiArrowDown />
               </div>
               <div
-                className="flex items-center justify-center w-1/6 h-80% bg-[#5D8BF4] rounded-[5px] cursor-pointer active:h-70% ease-in-out duration-300"
+                className="flex items-center justify-center w-2/12 h-80% bg-[#5D8BF4] hover:bg-[#5D8BF450] rounded-[5px] cursor-pointer active:h-75% ease-in-out duration-300"
                 onClick={() => {
                   if (groupMessage == "") {
                     return console.log("Empty message");
@@ -280,7 +280,7 @@ const ChatBox = ({ chatBox, peers }) => {
                 <SendMessage />
               </div>
               <div
-                className="flex items-center justify-center w-1/6 h-80% bg-[#5D8BF4] rounded-[5px] cursor-pointer active:h-70% ease-in-out duration-300"
+                className="flex items-center justify-center w-1/6 h-80% bg-[#4cb6cc] hover:bg-[#5D8BF450]  rounded-[5px] cursor-pointer active:h-75% ease-in-out duration-300"
                 onClick={() => {
                   const role = prompt("Enter role to send")
                   if (role) {
@@ -312,7 +312,7 @@ const ChatBox = ({ chatBox, peers }) => {
                     })
                   }
                 }}>
-                <SendMessage />
+                <span className="text-sm absolute">🔐</span> <SendMessage /> 
               </div>
             </div>
           </div>
