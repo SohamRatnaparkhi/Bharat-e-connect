@@ -27,6 +27,7 @@ const PublicMeet = ({ setScheduleMeet, setMeetType }) => {
     const { data, error } = await createMeeting(meetPresets);
     if (error) alert(error.message);
     const roomId = data?.data?.roomId;
+    console.log(`Room ID: ${roomId}`)
     if (!roomId) alert("Something went wrong");
     setMeetRoomId(roomId);
   };
