@@ -123,6 +123,9 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
   };
   const disableScreenShare = () => {
     setIsScreenShareOn(false);
+
+    // if(!shareScreenRef || !shareScreenRef.current) return; 
+
     let tracks = shareScreenRef.current.srcObject.getTracks();
     tracks.forEach((track) => track.stop());
     shareScreenRef.current.srcObject = null;
@@ -266,7 +269,7 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
           </div>
           {
             screenSharingPeerId != null && peers[screenSharingPeerId]?.cam && <Video
-              className="h-80%"
+              className="h-full w-full"
               key={screenSharingPeerId}
               peerId={screenSharingPeerId}
               track={peers[screenSharingPeerId].cam}
@@ -278,16 +281,17 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
           {Object.values(peers)
             // .filter((peer) => peer.cam)
             .map((peer) => (
-              <div key={peer.peerId} className="relative flex flex-4 m-1 items-center justify-center rounded-[8px] drop-shadow-xl border border-1 bg-slate-600 border-black">
+              <div key={peer.peerId} className="relative flex flex-4 m-1 items-center justify-center rounded-[8px] drop-shadow-xl border border-1 bg-[#708090] border-black">
                 <div className="absolute left-2 bottom-2 flex items-center justify-center h-[18px] px-2 py-2 bg-[#3535358C] rounded-[5px] text-[10px] text-white">
                   {peer.displayName?.split(",")?.[0]}{" "}
                 </div>
-                <div className="text-3xl">{peer.displayName?.split(",")?.[0].substring(0, 2)}</div>
+                {!peer.cam && <div className="text-3xl">{peer.displayName?.split(",")?.[0].substring(0, 2)}</div>}
 
 
-                <div className="absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center bg-[#3535358C] rounded-full text-white">
-                  <FiMicOff />
+                <div className={cn(peer.mic ? 'bg-sec-blue': 'bg-[#3535358C] ', "absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center rounded-full text-white")}>
+                  {peer.mic ? <FiMic/>: <FiMicOff />}
                 </div>
+
                 {peer.cam && <Video
                   className="h-full max-h-full"
                   key={peer.peerId}
@@ -295,11 +299,11 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
                   track={peer.cam}
                 // debug
                 />}
-                {/* Role: {peer.role},
-                        Name: {peer.displayName?.split(',')?.[0]} */}
+
+                {/* Role: {peer.role}, Name: {peer.displayName?.split(',')?.[0]} */}
               </div>
             ))}
-          <VideoBox videoRef={videoRef} />
+          <VideoBox videoRef={videoRef} isAudioPlaying={isAudioPlaying} />
         </div>
 
         <div className="relative flex flex-row justify-center w-full h-10%">

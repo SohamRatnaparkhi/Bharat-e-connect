@@ -42,7 +42,14 @@ const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording, isSc
   const setShareScreenRef1 = useMeetingStore(state => state.setShareScreenRef1);
   var screenShareStream = null;
   
-  var recorder = new RecordRTC_Extension();
+  var recorder;
+  
+  if(typeof RecordRTC_Extension === 'undefined') {
+    recorder = null;
+  } else {
+    recorder = new RecordRTC_Extension();
+  }
+  
   const startRecording = async () => {
     try {
       if (recorder == undefined || recorder == null) {
