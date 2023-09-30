@@ -6,46 +6,46 @@ import Sidebar from "../schedule-meets/components/Sidebar";
 import GroupsContacts from "./components/GroupsContacts";
 import AddContact from "./components/AddContact";
 import CreateGroup from "./components/CreateGroup";
-import { async } from "regenerator-runtime";
 import axios from "axios";
+import { useAppStore } from "../store/AppStore";
+import { useRouter } from "next/navigation";
 
 const Phonebook = () => {
   const [addGroup, setAddGroup] = React.useState(false);
   const [addContact, setAddContact] = React.useState(false);
-
+  const router = useRouter();
   const [phonebookData, setPhonebookData] = useState([]);
 
+  const user = useAppStore(state => state.user)
+
   useEffect(() => {
-    // fetch("api/phonebook/")
-    //   .then((res) => {
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     setPhonebookData(data);
-    //   });
     const getData = async () => {
-      const { data } = await axios.get("/api/nest/users/");
+      console.log(user)
+      if (!user) {
+        router.push('/login')
+      }
+      const { data } = await axios.get("/api/phonebook/" + user.userId);
       setPhonebookData(data);
     };
     getData();
   }, []);
   console.log(phonebookData)
-  const addContactHandler = async (name, address, userId) => {
+  const addContactHandler = async (name, address) => {
     const response = await axios
       .post("/api/phonebook/", {
         name: name,
         address: address,
-        userId: 'clmqll67z0001i0887xh2yn8l',
+        userId: user.userId,
       })
       .then((res) => {
-        return console.log(res.json());
+        console.log(res.json());
+        window.location.reload();
       })
       .catch(function (error) {
         console.log(`Post req: ${error}`);
       });
   };
 
-  // console.log(phonebookData)
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full bg-white">
@@ -74,7 +74,7 @@ const Phonebook = () => {
           setAddGroup={setAddGroup}
           phonebookData={phonebookData}
         />
-        {console.log("Phone" + phonebookData)}
+        {/* {console.log("Phone" + phonebookData)} */}
       </div>
     </div>
   );

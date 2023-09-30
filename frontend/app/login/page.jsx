@@ -15,7 +15,7 @@ const Login = () => {
   const [ethAddress, setEthAddress] = useState("");
   const router = useRouter()
   const handleLogin = async () => {
-    const { data } = await axios.post('/api/nest/users/login', {
+    const { data } = await axios.post('/api/users/', {
       email,
       password,
       ethAddress
@@ -23,7 +23,7 @@ const Login = () => {
     if (data?.ethAddress) {
       setLogin(true)
       setUser(data)
-      router.push('/schedule')
+      router.push('/schedule-meets')
     } else {
       alert("Something went wrong");
     }

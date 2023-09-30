@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import axios from 'axios';
 import { useAppStore } from '../store/AppStore';
 import { deployContract } from '../hooks/Web3';
+import { useRouter } from 'next/navigation';
 
 const Signup = () => {
   const [email, setEmail] = React.useState("");
@@ -15,10 +16,11 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const setLogin = useAppStore(state => state.setLogin)
   const setUser = useAppStore(state => state.setUser)
+  const router = useRouter()
   const handleSignup = async () => {
     const contract = await deployContract('abc def');
     console.log(contract.address ?? 'no address')
-    const { data } = await axios.post('/api/nest/users/', {
+    const { data } = await axios.put('/api/users/', {
       email,
       name: username,
       ethAddress,
@@ -26,10 +28,10 @@ const Signup = () => {
       password,
     });
     if (data?.ethAddress) {
-
       setLogin(true)
       setUser(data)
       alert("Signup successful")
+      router.push('/login')
     } else {
       alert("Something went wrong");
     }
