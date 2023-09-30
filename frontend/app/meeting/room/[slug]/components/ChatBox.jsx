@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useAppUtils } from "@huddle01/react/app-utils";
 import { useHuddle01 } from "@huddle01/react";
@@ -11,6 +11,8 @@ import { FiArrowDown, FiArrowLeft } from "react-icons/fi";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { SendMessage } from "@/app/svg-icons/MeetingOptions";
 import cn from "@/app/utils/cn";
+import { getjwt } from "../utils/info";
+import axios from "axios";
 
 const ChatBox = ({ chatBox, peers }) => {
   const { me } = useHuddle01();
@@ -23,6 +25,66 @@ const ChatBox = ({ chatBox, peers }) => {
   const roomPeerRoles = useMeetingStore((state) => state.roomPeerRoles);
   const [privateMode, setPrivateMode] = React.useState(false);
   const [talkTo, setTalkTo] = React.useState("*");
+  const [file, setFile] = useState();
+  const [fileurl, setFileurl] = useState();
+  const [filehash, setFileHash] = useState();
+
+  function handleChange(e) {
+    console.log(e.target.files);
+    setFile(URL.createObjectURL(e.target.files[0]));
+    setFileurl(e.target.files[0]);
+    uploadToIpfs(e.target.files[0]);
+  }
+
+  const uploadToIpfs = async (currFile) => {
+    const formData = new FormData();
+    formData.append('file', currFile);
+    console.log(currFile)
+    const metadata = JSON.stringify({
+      name: currFile.name,
+    });
+    formData.append('pinataMetadata', metadata);
+
+    const options = JSON.stringify({
+      cidVersion: 0,
+    })
+    formData.append('pinataOptions', options);
+
+    const JWT = `Bearer ${getjwt()}`;
+
+    try {
+      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+        maxBodyLength: "Infinity",
+        headers: {
+
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+          'Authorization': JWT
+        }
+      });
+      console.log(res.data);
+      setFileHash(res.data.IpfsHash);
+      sendData("*", {
+        sender: me,
+        message: 'ipfs.io/ipfs/' + res.data.IpfsHash,
+        kind: "group",
+        receiver: "*",
+        timeStamp: formatTime(new Date().getTime()),
+      });
+      addRoomMessage({
+        sender: me,
+        message: 'ipfs.io/ipfs/' + res.data.IpfsHash,
+        kind: "group",
+        isLink: true,
+        fileName: currFile.name,
+        receiver: "*",
+        timeStamp: formatTime(new Date().getTime()),
+      });
+      alert("Uploaded successfully");
+    } catch (error) {
+      console.log(error);
+      alert("There was an error. Please try again.");
+    }
+  }
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -223,7 +285,8 @@ const ChatBox = ({ chatBox, peers }) => {
                           {/* {message?.timeStamp} */}
                         </div>
                       </div>
-                      <div className="relative mt-3 text-black">{message.message}</div>
+                      {message.isLink && <div className="relative px-3 mt-3 text-black"><a href={`https://${message.message}`} target="_blank">{message.fileName}</a></div>}
+                      {message.isLink == null && <div className="relative mt-3 text-black">{message.message}</div>}
                     </div>
                   );
               })}
@@ -239,7 +302,9 @@ const ChatBox = ({ chatBox, peers }) => {
                 className="w-3/5 h-80% p-3 rounded-[5px] active:text-white"
               />
               <div className="w-1/6 h-80% flex items-center justify-center text-lg cursor-pointer hover:text-[#5D8BF4] active:bg-slate-300 rounded-full ease-in-out duration-300">
-                <FiArrowDown />
+                <input type="file" name="file" id="file" onChange={handleChange} />
+                  <FiArrowDown onClick={uploadToIpfs} />
+                {/* </input> */}
               </div>
               <div
                 className="flex items-center justify-center w-2/12 h-80% bg-[#5D8BF4] hover:bg-[#5D8BF450] rounded-[5px] cursor-pointer active:h-75% ease-in-out duration-300"
@@ -312,7 +377,9 @@ const ChatBox = ({ chatBox, peers }) => {
                     })
                   }
                 }}>
+
                 <span className="text-sm absolute">🔐</span> <SendMessage /> 
+
               </div>
             </div>
           </div>
