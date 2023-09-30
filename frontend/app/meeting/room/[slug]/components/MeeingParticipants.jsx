@@ -323,7 +323,7 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
             <div
               onClick={() => {
                 leaveRoom();
-                push("/schedule/");
+                push("/schedule-meets/");
               }}
               className={
                 "flex items-center justify-center h-[44px] w-[44px] rounded-full bg-[#EE2A2A] hover:brightness-200 ease-in-out duration-200 text-white"
