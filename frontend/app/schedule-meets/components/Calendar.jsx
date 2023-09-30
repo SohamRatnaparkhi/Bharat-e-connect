@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import dayjs from "dayjs";
 
 import NextIcon from "@/app/svg-icons/NextIcon";
@@ -11,17 +11,20 @@ import axios from "axios";
 
 
 import cn from "@/app/utils/cn";
+import { useAppStore } from "@/app/store/AppStore";
 
 const Calendar = () => {
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const currentDate = dayjs();
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
+  const user = useAppStore(state => state.user)
 
   useEffect(() => {
     const getMeets = async () => {
+      console.log(user.ethAddress)
       const { data } = await axios.patch('/api/meetings', {
-        "address":"0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc"
+        "address": user.ethAddress
       })
       console.log(data);
     }
