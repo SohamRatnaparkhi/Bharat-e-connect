@@ -19,24 +19,43 @@ const Controls = ({ URL }) => {
     const { isStarting, inProgress, isStopping, data } = useRecording();
     const isMuteOnJoin = useMeetingStore(state => state.isMuteOnJoin);
     const isDisableVideoOnJoin = useMeetingStore(state => state.isDisableVideoOnJoin);
-    const recorder = new RecordRTC_Extension();
     var screenShareStream = null;
+    var recorder;
+
+    if (typeof RecordRTC_Extension === 'undefined') {
+        recorder = null;
+    } else {
+        recorder = new RecordRTC_Extension();
+    }
+
     const startRecording = async () => {
-        if (!recorder) {
-            alert("RecordRTC chrome extension is either disabled or not installed. Install the extension to record the screen")
-        } else {
-            recorder.startRecording({
-                enableScreen: true,
-                enableMicrophone: true,
-                enableSpeakers: true
-            });
+        try {
+            if (recorder == undefined || recorder == null) {
+                alert("RecordRTC chrome extension is either disabled or not installed. Install the extension to record the screen")
+            } else {
+                recorder.startRecording({
+                    enableScreen: true,
+                    enableMicrophone: true,
+                    enableSpeakers: true
+                });
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
+
     const stopRecording = async () => {
-        recorder.stopRecording(function (blob) {
+        // console.log(recorder)
+        recorder.stopRecording(function (blob, error) {
             console.log("blob", blob)
+            console.log("error", error)
+            recorder = null;
+            if (blob == false) {
+                alert("RecordRTC chrome extension is either disabled or not installed. Install the extension to record the screen")
+                return;
+            }
             const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
+            link.href = window.URL?.createObjectURL(blob);
             link.download = `recording-${+new Date()}.webm`;
             link.click();
         });
