@@ -1,8 +1,13 @@
+'use client'
+
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
+  const { push } = useRouter();
   return (
     <div className="w-full bg-white overflow-hidden">
       <Navbar />
@@ -24,7 +29,7 @@ export default function Home() {
             <div className="relative text-left font-bold text-black text-2xl Montserrat mt-4 md:mt-6">
               Effortless Video Conferencing
             </div>
-            <button className="flex items-left justify-left text-black font-semibold text-sm md:text-base border border-solid border-black bg-gradient-to-r from-[#5D8BF4] from-20% via-[transparent] to-[#FFF] rounded-full mt-6 md:mt-8 p-3 md:p-4 px-6 md:px-8 space-x-2">
+            <button onClick={()=>{push('/schedule-meets/')}} className="flex items-left justify-left text-black font-semibold text-sm md:text-base border border-solid border-black bg-gradient-to-r from-[#5D8BF4] from-20% via-[transparent] to-[#FFF] rounded-full mt-6 md:mt-8 p-3 md:p-4 px-6 md:px-8 space-x-2">
               <span>Schedule a meeting</span>
               <HiOutlineArrowRight size={24} />
             </button>
@@ -78,8 +83,8 @@ export default function Home() {
           </div>
 
 
-          <div className="bg-card-color p-4 shadow-md p-8">
-            <h2 className="text-xl font-semibold font-[600] px-4">Immutable Record Keeping</h2>
+          <div className="bg-card-color shadow-md p-8">
+            <h2 className="text-xl font-semibold  px-4">Immutable Record Keeping</h2>
             <p className='p-4'>Meetings, decisions, and actions taken by AICTE committees and officials can be recorded on the blockchain. This creates an immutable and transparent record of all activities, making it easier to track and audit processes.</p>
           </div>
         </div>

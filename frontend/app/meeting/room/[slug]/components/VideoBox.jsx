@@ -6,7 +6,9 @@ import { useEventListener } from "@huddle01/react/hooks";
 
 import { FiMicOff, FiMic } from "react-icons/fi";
 
-const VideoBox = ({ index, videoRef }) => {
+import cn from "@/app/utils/cn";
+
+const VideoBox = ({ index, videoRef, isAudioPlaying }) => {
   // let vw = window.innerWidth;
   // let vh = window.innerHeight;
 
@@ -28,8 +30,8 @@ const VideoBox = ({ index, videoRef }) => {
       <div className="absolute left-2 bottom-2 flex items-center justify-center h-[18px] px-2 py-2 bg-[#3535358C] rounded-[5px] text-[10px] text-white">
         {me.displayName.split(",")[0]}
       </div>
-      <div className="z-30 absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center bg-[#3535358C] rounded-full text-white">
-        <FiMicOff />
+      <div className={cn(isAudioPlaying? 'bg-sec-blue': 'bg-[#3535358C]' , "z-30 absolute right-2 top-2 w-[30px] h-[30px] flex items-center justify-center  rounded-full text-white")}>
+        {isAudioPlaying ? <FiMic /> : <FiMicOff />}
       </div>
       {/* <div className="-z-10 absolute flex items-center justify-center left-1/2 top-1/2 rounded-full  w-48 h-48 text-6xl font-semibold bg-slate-400 -translate-x-1/2 -translate-y-1/2">
         {me.displayName.split(",")[0].split("")[0]}
