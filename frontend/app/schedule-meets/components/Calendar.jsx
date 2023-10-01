@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 import NextIcon from "@/app/svg-icons/NextIcon";
 import PrevIcon from "@/app/svg-icons/PrevIcon";
 import { months, generateDate } from "@/app/utils/calendar";
-import { getMeeting } from "@/app/hooks/MeetApiCalls";
 
 import axios from "axios";
 
@@ -19,21 +18,65 @@ const Calendar = () => {
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
   const user = useAppStore(state => state.user)
+  const [meetingsData, setMeetingsData] = useState([])
+  const [userMeets, setUserMeets] = useState([])
+  const [userPerMonthMeets, setUserPerMonthMeets] = useState([])
+  const [showDayMeets, setShowDayMeets] = useState([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false])
 
   useEffect(() => {
     const getMeets = async () => {
-      console.log(user.ethAddress)
+      // console.log(user.ethAddress)
       const { data } = await axios.patch('/api/meetings', {
         "address": user.ethAddress
       })
       console.log(data);
+      setUserMeets(data.data)
+      const dates = []
+      for (let i = 0; i < 12; i++) {
+        dates.push([])
+      }
+      const meetsMetaData = {}
+      // console.log(userMeets)
+      // const meetShow = []
+      const processUserMeets = () => {
+        data.data.forEach((meet) => {
+          const strDate = meet.meetConfig.date;
+          const date = new Date(strDate);
+          if (!date || date === undefined || date === null) {
+            return;
+          }
+          const month = date.getMonth();
+          const day = date.getDate();
+          const hash = day + "," + month;
+          if (!meetsMetaData[hash]) {
+            meetsMetaData[hash] = [];
+          }
+          meetsMetaData[hash].push(meet);
+          dates[month].push(day);
+        });
+      }
+      processUserMeets();
+      setUserPerMonthMeets(dates)
+      setMeetingsData(meetsMetaData)
+      // console.log(meetsMetaData)
+      // setShowDayMeets(meetShow)
     }
-
     getMeets();
+    // console.log(meetingsData)
   }, [])
 
 
+  const getMeetByDate = (date) => {
 
+    console.log(date)
+    const strDate = new Date(date);
+    console.log(strDate.toDateString())
+    const meet = meetingsData[strDate];
+    if (!meet) {
+      return null;
+    }
+    return meet.title;
+  }
 
   return (
     <div className="relative flex justify-end w-9/12 h-5/6">
@@ -47,7 +90,7 @@ const Calendar = () => {
               className="relative"
               onClick={() => {
                 setToday(today.month(today.month() - 1));
-                // console.log(`Month: ${today.month()}`);
+                console.log(`Month: ${today.month()}`);
               }}
             >
               <PrevIcon />
@@ -56,7 +99,7 @@ const Calendar = () => {
               className="relative"
               onClick={() => {
                 setToday(today.month(today.month() + 1));
-                // console.log(`Year: ${today.year()}`);
+                console.log(`Year: ${today.year()}`);
               }}
             >
               <NextIcon />
@@ -101,6 +144,24 @@ const Calendar = () => {
                       " border-[#5D8BF4C7] flex flex-row justify-end items-start p-2 "
                     )}
                   >
+                    <div className="flex flex-col justify-left items-left">
+                      {userPerMonthMeets[date.month()]?.includes(date.date()) && (
+                        <div className="w-2 h-2 bg-red-500 rounded-full">{meetingsData[date.date() + "," + date.month()]?.length} meets</div>
+                      )}
+                    </div>
+                    {
+                      showDayMeets[index] && (
+                          <div>
+                            {
+                              meetingsData[date.date() + "," + date.month()]?.map((meet, index) => {
+                                return (
+                                  <div className="w-full h-10 bg-red-500 rounded-full">{meet.title}</div>
+                                )
+                              })
+                            }
+                          </div>
+                      )
+                    }
                     <h1
                       className={cn(
                         currentMonth ? "text-black" : "text-[#ccc]",
@@ -113,6 +174,10 @@ const Calendar = () => {
                       )}
                       onClick={() => {
                         setSelectDate(date);
+                        var shows = showDayMeets;
+                        var curr = shows[index];
+                        shows[index] = !curr;
+                        setShowDayMeets(shows)
                       }}
                     >
                       {date.date()}
