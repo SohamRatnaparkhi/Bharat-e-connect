@@ -122,6 +122,8 @@ const ChatBox = ({ chatBox, peers }) => {
     }
   };
 
+  console.log(roomMessages)
+
   return (
     <div className={cn(chatBox ? "w-25%" : "0", "ease-in-out duration-300")}>
       {chatBox && (
@@ -190,7 +192,7 @@ const ChatBox = ({ chatBox, peers }) => {
                 );
               })}
             </div>
-
+            
             {/* Individual messages */}
             <div
               className={cn(
@@ -213,7 +215,7 @@ const ChatBox = ({ chatBox, peers }) => {
                   {
                     roomMessages.filter(
                       (message) =>
-                        message.sender?.meId == talkTo || message.receiver == talkTo
+                        message.sender?.meId == talkTo || message.receiver == talkTo || message.receivers?.includes(talkTo)
                     ).length > 0
                       ? roomMessages
                         .filter(
@@ -358,13 +360,15 @@ const ChatBox = ({ chatBox, peers }) => {
                           message: groupMessage,
                           kind: "private",
                           receiver: peerId,
+                          receivers: peerIdsToSend,
                           timeStamp: formatTime(new Date().getTime()),
                         });
-                        addRoomMessage([peerId], {
+                        addRoomMessage({
                           sender: me,
                           message: groupMessage,
                           kind: "private",
                           receiver: peerId,
+                          receivers: peerIdsToSend,
                           timeStamp: formatTime(new Date().getTime()),
                         });
                         console.log(

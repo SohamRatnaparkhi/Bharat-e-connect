@@ -36,7 +36,7 @@ const MeetLobby = ({ params }) => {
   const [isPeerHost, setIsPeerHost] = React.useState(false);
 
   const { initialize, me } = useHuddle01();
-  const { isRoomJoined } = useRoom();
+  const { isRoomJoined, error } = useRoom();
   const { peers } = usePeers();
   const { joinLobby, leaveLobby, isLoading, isLobbyJoined } = useLobby();
   const [accessDenied, setAccessDenied] = React.useState(false);
@@ -48,7 +48,7 @@ const MeetLobby = ({ params }) => {
   const {
     fetchVideoStream,
     stopVideoStream,
-    error,
+    // error,
   } = useVideo();
   const { joinRoom } = useRoom();
   // const { setDisplayName } = useAppUtils();
@@ -86,6 +86,8 @@ const MeetLobby = ({ params }) => {
       return;
     }
   }
+
+  console.log(error)
 
   const checkLobbyConditions = async () => {
     var { address } = await getWalletDetails();
@@ -149,15 +151,19 @@ const MeetLobby = ({ params }) => {
     if (isRoomJoined) {
       push(`/meeting/room/${params.slug}`);
     }
+    console.log(isRoomJoined)
+    console.log("abcd")
   }, [isRoomJoined]);
 
 
-
+  console.log(isRoomJoined)
   const handleMeetStart = () => {
     console.log("is lobby joined", isLobbyJoined)
-    if (!isLobbyJoined) return;
+    // if (!isLobbyJoined) return;
     setMyPeerId(me.meId);
+    console.log("joining room")
     joinRoom();
+    console.log("joining room done")
   }
 
   if (isLoading) return (<div><iframe src="https://lottie.host/?file=307fb28b-48a0-477a-8c49-a9ba66f14a79/clHpsh7QES.json"></iframe></div>)
@@ -167,6 +173,7 @@ const MeetLobby = ({ params }) => {
       <Navbar />
       {/* {isLobbyJoined}
       {JSON.stringify(peers)} */}
+      {isRoomJoined}
       <h2 className="text-3xl font-bold m-5">READY TO JOIN?</h2>
       
       <div className='flex flex-col items-center bg-[#5D8BF436] h-3/5 w-1/2 rounded-[20px]'>
@@ -281,7 +288,7 @@ const MeetLobby = ({ params }) => {
                   }}
 
                 >
-                  {`JOIN MEET`}
+                  {`JOIN MEET ${joinRoom.isCallable}`}
           </Button>
         </div>
     </div>
