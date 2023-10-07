@@ -9,6 +9,8 @@ import { formatTime } from "../../(utils)/TIme";
 
 import { FiArrowDown, FiArrowLeft } from "react-icons/fi";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { FcFile } from "react-icons/fc";
+
 import { SendMessage } from "@/app/svg-icons/MeetingOptions";
 import cn from "@/app/utils/cn";
 import { getjwt } from "../utils/info";
@@ -21,7 +23,9 @@ const ChatBox = ({ chatBox, peers }) => {
   const roomMessages = useMeetingStore((state) => state.roomMessages);
   const addRoomMessage = useMeetingStore((state) => state.addRoomMessage);
   const addPeerToRole = useMeetingStore((state) => state.addPeerToRole);
-  const removePeerFromRole = useMeetingStore((state) => state.removePeerFromRole);
+  const removePeerFromRole = useMeetingStore(
+    (state) => state.removePeerFromRole
+  );
   const roomPeerRoles = useMeetingStore((state) => state.roomPeerRoles);
   const [privateMode, setPrivateMode] = React.useState(false);
   const [talkTo, setTalkTo] = React.useState("*");
@@ -38,41 +42,44 @@ const ChatBox = ({ chatBox, peers }) => {
 
   const uploadToIpfs = async (currFile) => {
     const formData = new FormData();
-    formData.append('file', currFile);
-    console.log(currFile)
+    formData.append("file", currFile);
+    console.log(currFile);
     const metadata = JSON.stringify({
       name: currFile.name,
     });
-    formData.append('pinataMetadata', metadata);
+    formData.append("pinataMetadata", metadata);
 
     const options = JSON.stringify({
       cidVersion: 0,
-    })
-    formData.append('pinataOptions', options);
+    });
+    formData.append("pinataOptions", options);
 
     const JWT = `Bearer ${getjwt()}`;
 
     try {
-      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-        maxBodyLength: "Infinity",
-        headers: {
-
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-          'Authorization': JWT
+      const res = await axios.post(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        formData,
+        {
+          maxBodyLength: "Infinity",
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+            Authorization: JWT,
+          },
         }
-      });
+      );
       console.log(res.data);
       setFileHash(res.data.IpfsHash);
       sendData("*", {
         sender: me,
-        message: 'ipfs.io/ipfs/' + res.data.IpfsHash,
+        message: "ipfs.io/ipfs/" + res.data.IpfsHash,
         kind: "group",
         receiver: "*",
         timeStamp: formatTime(new Date().getTime()),
       });
       addRoomMessage({
         sender: me,
-        message: 'ipfs.io/ipfs/' + res.data.IpfsHash,
+        message: "ipfs.io/ipfs/" + res.data.IpfsHash,
         kind: "group",
         isLink: true,
         fileName: currFile.name,
@@ -84,7 +91,7 @@ const ChatBox = ({ chatBox, peers }) => {
       console.log(error);
       alert("There was an error. Please try again.");
     }
-  }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -94,35 +101,36 @@ const ChatBox = ({ chatBox, peers }) => {
       console.log("message", {
         sender: me,
         message: groupMessage,
-        kind: talkTo == '*' ? "group" : "private",
-        receiver: talkTo == '*' ? "*" : talkTo,
+        kind: talkTo == "*" ? "group" : "private",
+        receiver: talkTo == "*" ? "*" : talkTo,
         timeStamp: formatTime(new Date().getTime()),
       });
-      const peerIdsToSend = talkTo == "*" ? "*" : [talkTo]
+      const peerIdsToSend = talkTo == "*" ? "*" : [talkTo];
       sendData(peerIdsToSend, {
         sender: me,
         message: groupMessage,
-        kind: talkTo == '*' ? "group" : "private",
-        receiver: talkTo == '*' ? "*" : talkTo,
+        kind: talkTo == "*" ? "group" : "private",
+        receiver: talkTo == "*" ? "*" : talkTo,
         timeStamp: formatTime(new Date().getTime()),
       });
       addRoomMessage({
         sender: me,
         message: groupMessage,
-        kind: talkTo == '*' ? "group" : "private",
-        receiver: talkTo == '*' ? "*" : talkTo,
+        kind: talkTo == "*" ? "group" : "private",
+        receiver: talkTo == "*" ? "*" : talkTo,
         timeStamp: formatTime(new Date().getTime()),
       });
       console.log(
         "sent group message - ",
         groupMessage,
-        " - to ", peerIdsToSend
+        " - to ",
+        peerIdsToSend
       );
       setGroupMessage("");
     }
   };
 
-  console.log(roomMessages)
+  console.log(roomMessages);
 
   return (
     <div className={cn(chatBox ? "w-25%" : "0", "ease-in-out duration-300")}>
@@ -170,29 +178,33 @@ const ChatBox = ({ chatBox, peers }) => {
             >
               {Object.values(peers).map((peer) => {
                 return (
-                  <div className="w-80% h-10% border-b-[1px] flex flex-row justify-between items-center">
+                  <div className="w-80% h-10% flex flex-row justify-between items-center">
                     <div
                       key={peer.peerId}
                       onClick={() => setTalkTo(peer.peerId)}
-                      className="flex w-80% h-full justify-between items-center pt-1 p-2 text-[#808080] font-semibold  border-[#cccccc] active:bg-[#dddddd] rounded-[6px]"
+                      className="flex border-b-[1px] w-80% h-full justify-between items-center pt-1 p-2 text-[#808080] font-semibold  border-[#cccccc] active:bg-[#dddddd] rounded-[6px]"
                     >
                       <div>{peer.displayName?.split(",")?.[0]}</div>
+                      {console.log(
+                        `Contacts: ${peer.displayName?.split(",")?.[0]}`
+                      )}
                     </div>
-                    <div className="rounded-full p-2 active:bg-[#eeeeee]" onClick={
-                      () => {
+                    <div
+                      className="rounded-full p-2 active:bg-[#eeeeee]"
+                      onClick={() => {
                         const role = prompt("Enter role name");
                         if (role) {
                           addPeerToRole(role, peer.peerId);
                         }
-                      }
-                    }>
+                      }}
+                    >
                       <AiOutlineUsergroupAdd />{" "}
                     </div>
                   </div>
                 );
               })}
             </div>
-            
+
             {/* Individual messages */}
             <div
               className={cn(
@@ -204,7 +216,7 @@ const ChatBox = ({ chatBox, peers }) => {
                 onClick={() => {
                   setTalkTo("*");
                 }}
-                className="absolute left-1 top-1 rounded-full bg-[#808080]"
+                className="absolute left-1 top-1 flex items-center justify-center rounded-full hover:bg-[#cccccc] w-[30px] h-[30px] cursor-pointer"
               >
                 <FiArrowLeft />
               </div>
@@ -212,45 +224,82 @@ const ChatBox = ({ chatBox, peers }) => {
                 {console.log(peers.peerId?.displayName?.split(",")?.[0])}
                 {peers[talkTo]?.displayName?.split(",")?.[0]}
                 <div>
-                  {
-                    roomMessages.filter(
-                      (message) =>
-                        message.sender?.meId == talkTo || message.receiver == talkTo || message.receivers?.includes(talkTo)
-                    ).length > 0
-                      ? roomMessages
+                  {roomMessages.filter(
+                    (message) =>
+                      message.sender?.meId == talkTo ||
+                      message.receiver == talkTo ||
+                      message.receivers?.includes(talkTo)
+                  ).length > 0
+                    ? roomMessages
                         .filter(
                           (message) =>
-                            message.sender?.meId == talkTo || message.receiver == talkTo
+                            message.sender?.meId == talkTo ||
+                            message.receiver == talkTo
                         )
                         .map((message, index) => {
                           if (message.kind == "private")
                             return (
                               <div
                                 className={cn(
-                                  message.sender.displayName ==
-                                    me.displayName
-                                    ? "bg-[#5D8BF475] right-1 rounded-tr-none rounded-bl-[12px] rounded-br-[12px] rounded-tl-[12px]"
-                                    : "bg-slate-400 left-1 rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px] rounded-tl-none",
-                                  "w-95% flex flex-col p-2 my-2 "
+                                  message.sender.displayName === me.displayName
+                                    ? "justify-end"
+                                    : "justify-start",
+                                  "flex flex-row items-center w-full h-auto"
                                 )}
-                                key={index}
                               >
-                                <div className="relative flex flex-row justify-between h-10%">
-                                  <div className="text-white text-sm font-semibold">
-                                    {message.sender.displayName.split(",")[0]}:
+                                <div
+                                  className={cn(
+                                    message.sender.displayName == me.displayName
+                                      ? "bg-[#5D8BF475] right-1 rounded-tr-none rounded-bl-[12px] rounded-br-[12px] rounded-tl-[12px]"
+                                      : "bg-[#aacc] left-1 rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px] rounded-tl-none",
+                                    "w-auto items-start flex flex-col p-2 my-2 "
+                                  )}
+                                  key={index}
+                                >
+                                  <div className="relative flex flex-row justify-between h-5% gap-3">
+                                    <div className="text-white text-sm font-semibold">
+                                      {message.sender.displayName.split(",")[0]}
+                                      :
+                                    </div>
+                                    <div className="text-[12px] font-semibold text-white">
+                                      {/* {console.log(`TimeStamp: ${JSON.stringify(message)}`)} */}
+                                      {message?.timeStamp}
+                                    </div>
                                   </div>
-                                  <div className="text-[12px] font-semibold text-white">
-                                    {/* {console.log(`TimeStamp: ${JSON.stringify(message)}`)} */}
-                                    {/* {message?.timeStamp} */}
-                                  </div>
+                                  {message.isLink && (
+                                    <div className="w-full h-full flex flex-col">
+                                      <div
+                                        className={cn(
+                                          message.sender.displayName ===
+                                            me.displayName
+                                            ? "bg-[#36435d7e]"
+                                            : "bg-[#5D8BF475]",
+                                          "relative flex flex-row items-center w-full h-6 rounded-[5px] p-1"
+                                        )}
+                                      >
+                                        <FcFile />{" "}
+                                        <div className="text-xs">IPFS File</div>
+                                      </div>
+                                      <div className="relative px-3 mt-1 text-sec-blue">
+                                        <a
+                                          href={`https://${message.message}`}
+                                          target="_blank"
+                                        >
+                                          {message.fileName}
+                                        </a>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {message.isLink == null && (
+                                    <div className="relative mt-1 text-black">
+                                      {message.message}
+                                    </div>
+                                  )}
                                 </div>
-                                <div className="relative mt-3 text-black">{message.message}</div>
                               </div>
                             );
-                        }
-                        )
-                      : "No messages yet"
-                  }
+                        })
+                    : "No messages yet"}
                 </div>
               </div>
             </div>
@@ -259,7 +308,7 @@ const ChatBox = ({ chatBox, peers }) => {
             <div
               className={cn(
                 !privateMode ? "w-85% h-75%" : "w-0 h-0",
-                "flex flex-col overflow-y-scroll ease-in-out duration-300"
+                "relative flex flex-col overflow-y-scroll ease-in-out duration-300"
               )}
             >
               {roomMessages.map((message, index) => {
@@ -267,28 +316,63 @@ const ChatBox = ({ chatBox, peers }) => {
                   return (
                     <div
                       className={cn(
-                        message.sender.displayName == me.displayName
-                          ? "bg-[#5D8BF475] right-1 rounded-tr-none rounded-bl-[12px] rounded-br-[12px] rounded-tl-[12px]"
-                          : "bg-slate-400 left-1 rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px] rounded-tl-none",
-                        "w-95% flex flex-col p-2 my-2 "
+                        message.sender.displayName === me.displayName
+                          ? "justify-end"
+                          : "justify-start",
+                        "flex flex-row items-center w-full h-auto"
                       )}
-                      key={index}
                     >
-                      {" "}
-                      {console.log(
-                        `me: ${me.displayName === message.sender.displayName}`
-                      )}
-                      <div className="relative flex flex-row justify-between h-10%">
-                        <div className="text-white text-sm font-semibold">
-                          {message.sender.displayName.split(",")[0]}:
+                      <div
+                        className={cn(
+                          message.sender.displayName === me.displayName
+                            ? "bg-[#5D8BF475] right-1 rounded-tr-none rounded-bl-[12px] rounded-br-[12px] rounded-tl-[12px]"
+                            : "bg-[#aacc] left-1 rounded-tr-[12px] rounded-bl-[12px] rounded-br-[12px] rounded-tl-none",
+                          "w-auto flex flex-col p-2 my-2 "
+                        )}
+                        key={index}
+                      >
+                        {" "}
+                        {console.log(
+                          `me: ${me.displayName === message.sender.displayName}`
+                        )}
+                        <div className="relative flex flex-row justify-between gap-3 h-5%">
+                          <div className="text-white text-sm font-semibold">
+                            {message.sender.displayName.split(",")[0]}:
+                          </div>
+                          <div className="text-[12px] font-semibold text-white">
+                            {/* {console.log(`TimeStamp: ${JSON.stringify(message)}`)} */}
+                            {message?.timeStamp}
+                          </div>
                         </div>
-                        <div className="text-[12px] font-semibold text-white">
-                          {/* {console.log(`TimeStamp: ${JSON.stringify(message)}`)} */}
-                          {/* {message?.timeStamp} */}
-                        </div>
+                        {message.isLink && (
+                          <div className="w-full h-full flex flex-col">
+                            <div
+                              className={cn(
+                                message.sender.displayName === me.displayName
+                                  ? "bg-[#36435d7e]"
+                                  : "bg-[#5D8BF475]",
+                                "relative flex flex-row items-center w-full h-6 rounded-[5px] p-1"
+                              )}
+                            >
+                              <FcFile />{" "}
+                              <div className="text-xs">IPFS File</div>
+                            </div>
+                            <div className="relative px-3 mt-1 text-sec-blue">
+                              <a
+                                href={`https://${message.message}`}
+                                target="_blank"
+                              >
+                                {message.fileName}
+                              </a>
+                            </div>
+                          </div>
+                        )}
+                        {message.isLink == null && (
+                          <div className="relative mt-1 text-black">
+                            {message.message}
+                          </div>
+                        )}
                       </div>
-                      {message.isLink && <div className="relative px-3 mt-3 text-black"><a href={`https://${message.message}`} target="_blank">{message.fileName}</a></div>}
-                      {message.isLink == null && <div className="relative mt-3 text-black">{message.message}</div>}
                     </div>
                   );
               })}
@@ -304,8 +388,17 @@ const ChatBox = ({ chatBox, peers }) => {
                 className="w-3/5 h-80% p-3 rounded-[5px] active:text-white"
               />
               <div className="w-1/6 h-80% flex items-center justify-center text-lg cursor-pointer hover:text-[#5D8BF4] active:bg-slate-300 rounded-full ease-in-out duration-300">
-                <input type="file" name="file" id="file" onChange={handleChange} />
+                <input
+                  type="file"
+                  name="file"
+                  id="file"
+                  className="w-0 h-0"
+                  onChange={handleChange}
+                />
+                <label for="file">
+                  {" "}
                   <FiArrowDown onClick={uploadToIpfs} />
+                </label>
                 {/* </input> */}
               </div>
               <div
@@ -317,29 +410,30 @@ const ChatBox = ({ chatBox, peers }) => {
                   console.log("message", {
                     sender: me,
                     message: groupMessage,
-                    kind: talkTo == '*' ? "group" : "private",
-                    receiver: talkTo == '*' ? "*" : talkTo,
+                    kind: talkTo == "*" ? "group" : "private",
+                    receiver: talkTo == "*" ? "*" : talkTo,
                     timeStamp: formatTime(new Date().getTime()),
                   });
-                  const peerIdsToSend = talkTo == "*" ? "*" : [talkTo]
+                  const peerIdsToSend = talkTo == "*" ? "*" : [talkTo];
                   sendData(peerIdsToSend, {
                     sender: me,
                     message: groupMessage,
-                    kind: talkTo == '*' ? "group" : "private",
-                    receiver: talkTo == '*' ? "*" : talkTo,
+                    kind: talkTo == "*" ? "group" : "private",
+                    receiver: talkTo == "*" ? "*" : talkTo,
                     timeStamp: formatTime(new Date().getTime()),
                   });
                   addRoomMessage({
                     sender: me,
                     message: groupMessage,
-                    kind: talkTo == '*' ? "group" : "private",
-                    receiver: talkTo == '*' ? "*" : talkTo,
+                    kind: talkTo == "*" ? "group" : "private",
+                    receiver: talkTo == "*" ? "*" : talkTo,
                     timeStamp: formatTime(new Date().getTime()),
                   });
                   console.log(
                     "sent group message - ",
                     groupMessage,
-                    " - to ", peerIdsToSend
+                    " - to ",
+                    peerIdsToSend
                   );
                   setGroupMessage("");
                 }}
@@ -349,11 +443,11 @@ const ChatBox = ({ chatBox, peers }) => {
               <div
                 className="flex items-center justify-center w-1/6 h-80% bg-[#4cb6cc] hover:bg-[#5D8BF450]  rounded-[5px] cursor-pointer active:h-75% ease-in-out duration-300"
                 onClick={() => {
-                  const role = prompt("Enter role to send")
+                  const role = prompt("Enter role to send");
                   if (role) {
-                    const peerIdsToSend = roomPeerRoles[role]
-                    console.log(roomPeerRoles)
-                    peerIdsToSend.forEach(peerId => {
+                    const peerIdsToSend = roomPeerRoles[role];
+                    console.log(roomPeerRoles);
+                    peerIdsToSend.forEach((peerId) => {
                       if (peerId) {
                         sendData([peerId], {
                           sender: me,
@@ -374,16 +468,16 @@ const ChatBox = ({ chatBox, peers }) => {
                         console.log(
                           "sent group message - ",
                           groupMessage,
-                          " - to ", peerIdsToSend
+                          " - to ",
+                          peerIdsToSend
                         );
                         setGroupMessage("");
                       }
-                    })
+                    });
                   }
-                }}>
-
-                <span className="text-sm absolute">🔐</span> <SendMessage /> 
-
+                }}
+              >
+                <span className="text-sm absolute">🔐</span> <SendMessage />
               </div>
             </div>
           </div>
