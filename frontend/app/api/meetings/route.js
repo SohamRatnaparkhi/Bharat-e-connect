@@ -26,7 +26,7 @@ async function createMeeting(request) {
                         description: meetDescription,
                         muteOnEntry: muteOnEntry,
                         videoOnEntry: disableVideo,
-                        roomLocked: true,
+                        roomLocked: false,
                     }),
                     headers: {
                         'Content-Type': 'application/json',
