@@ -322,17 +322,6 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
             </div>
             <div
               onClick={() => {
-                leaveRoom();
-                push("/schedule-meets/");
-              }}
-              className={
-                "flex items-center justify-center h-[44px] w-[44px] rounded-full bg-[#EE2A2A] hover:brightness-200 ease-in-out duration-200 text-white"
-              }
-            >
-              <FiPhoneOff />
-            </div>
-            <div
-              onClick={() => {
                 setIsAudioPlaying(!isAudioPlaying);
                 isAudioPlaying ? stopAudioStream() : fetchAudioStream();
               }}
@@ -342,6 +331,17 @@ const MeetingParticipants = ({ chatBox, isRecording, peers, displayName }) => {
               )}
             >
               {isAudioPlaying ? <FiMic /> : <FiMicOff />}
+            </div>
+            <div
+              onClick={() => {
+                leaveRoom();
+                push("/schedule-meets/");
+              }}
+              className={
+                "flex items-center justify-center h-[44px] w-[44px] rounded-full bg-[#EE2A2A] hover:brightness-200 ease-in-out duration-200 text-white"
+              }
+            >
+              <FiPhoneOff />
             </div>
             <div onClick={enableShareScreen} className="bg-[#EE2A2A] flex items-center justify-center h-[44px] w-[44px] rounded-full text-white">
               <FiTv />

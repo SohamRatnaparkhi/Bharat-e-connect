@@ -65,15 +65,15 @@ const MeetLobby = ({ params }) => {
   const setRoomId = useMeetingStore(state => state.setRoomId);
   const setMyEthAddress = useMeStore(state => state.setMyEthAddress);
 
-  useEffect(() => {
-    const setPeerEthAddress = async () => {
-      var { address } = await getWalletDetails();
-      if (address)
-        setPeerAddress(address);
-      console.log(address)
-    };
-    setPeerEthAddress();
-  }, [peerAddress]);
+  // useEffect(() => {
+  //   const setPeerEthAddress = async () => {
+  //     var { address } = await getWalletDetails();
+  //     if (address)
+  //       setPeerAddress(address);
+  //     console.log(address)
+  //   };
+  //   setPeerEthAddress();
+  // }, [peerAddress]);
 
   const pushPeerToLobby = () => {
     if (isPeerHost) {
@@ -90,13 +90,20 @@ const MeetLobby = ({ params }) => {
   console.log(error)
 
   const checkLobbyConditions = async () => {
+    const meetDetails = await getMeeting(params.slug);
+    const meet = meetDetails.data?.data;
+    setRoomId(meet.roomId);
+
+    if(!meet?.meetConfig.isPrivate) {
+      pushPeerToLobby();
+      console.log("Public Meeting")
+      return;
+    }
+
     var { address } = await getWalletDetails();
     setMyEthAddress(address);
     setPeerAddress(address);
-    const meetDetails = await getMeeting(params.slug);
     console.log(meetDetails)
-    const meet = meetDetails.data?.data;
-    setRoomId(meet.roomId);
     console.log(meet.hostAddresses, address)
     if (meet?.meetConfig.audioDisabled)
       setMuteOnJoin(true);

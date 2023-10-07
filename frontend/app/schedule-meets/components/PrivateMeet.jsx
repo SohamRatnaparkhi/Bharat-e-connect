@@ -8,6 +8,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 
+import { useAppStore } from "@/app/store/AppStore";
+
 const PrivateMeet = ({ setMeetType, setScheduleMeet }) => {
   const [meetTitle, setMeetTitle] = useState("General Meeting");
   const [meetDescription, setMeetDescription] = useState("No description");
@@ -19,7 +21,7 @@ const PrivateMeet = ({ setMeetType, setScheduleMeet }) => {
     useState([]);
   const [walletsStrParticipants, setWalletStrParticipants] = useState();
   const [meetRoomId, setMeetRoomId] = useState("");
-
+  const user = useAppStore((state) => state.user);
   const [date, setDate] = useState();
   const [startTime, setStartTime] = useState();
 
@@ -88,13 +90,15 @@ const PrivateMeet = ({ setMeetType, setScheduleMeet }) => {
 
   const handleCreateRoom = async () => {
 
+    console.log("User", user)
+
     const day = Number(date.split("-")[2]);
     const month = Number(date.split("-")[1]);
     const year = Number(date.split("-")[0]);
 
     const commaSeparatedHosts = walletsStr.split(",");
     const commaSeparatedParticipants = walletsStrParticipants?.split(",");
-    if (commaSeparatedHosts) hostWalletAddresses.push(...commaSeparatedHosts);
+    if (commaSeparatedHosts) hostWalletAddresses.push(...commaSeparatedHosts, user?.ethAddress);
     if (commaSeparatedParticipants)
       participantsWalletAddresses.push(...commaSeparatedParticipants);
     const meetPresets = {

@@ -229,7 +229,7 @@ const MeetingSidebar = ({ chatBox, setChatBox, isRecording, setIsRecording, isSc
 
       <div className="relative flex flex-col items-center justify-center gap-3 h-1/5 w-full ">
         <div className="relative h-[44px] w-[44px] rounded-full bg-black"></div>
-        <div className="text-sm">Log out</div>
+        {/* <div className="text-sm">Log out</div> */}
       </div>
     </div>
   );

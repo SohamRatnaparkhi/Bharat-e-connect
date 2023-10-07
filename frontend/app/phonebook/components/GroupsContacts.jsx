@@ -103,7 +103,7 @@ const GroupsContacts = ({addContact, setAddContact, addGroup, setAddGroup, phone
                       if(index%2==1){
                       return(
                     <div className="flex flex-row items-center justify-start gap-5 w-90% h-30% ">
-                    <div className="h-[50px] w-[50px] rounded-full bg-red-300 text-xl text-white text-center flex items-center justify-center">{contact?.name?.substring(0, 2)}</div>
+                    <div className="h-[50px] w-[50px] rounded-full bg-[#9d4f4f] text-xl text-white text-center flex items-center justify-center">{contact?.name?.substring(0, 2)}</div>
                     <div className="flex flex-col justify-evenly p-3 w-70% h-full bg-white ">
                       <div className="text-sm font-semibold ">
                         {contact.name}
