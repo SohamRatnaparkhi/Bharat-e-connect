@@ -8,7 +8,6 @@ import { months, generateDate } from "@/app/utils/calendar";
 
 import axios from "axios";
 
-
 import cn from "@/app/utils/cn";
 import { useAppStore } from "@/app/store/AppStore";
 
@@ -17,25 +16,58 @@ const Calendar = () => {
   const currentDate = dayjs();
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
-  const user = useAppStore(state => state.user)
-  const [meetingsData, setMeetingsData] = useState([])
-  const [userMeets, setUserMeets] = useState([])
-  const [userPerMonthMeets, setUserPerMonthMeets] = useState([])
-  const [showDayMeets, setShowDayMeets] = useState([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false])
+  const user = useAppStore((state) => state.user);
+  const [meetingsData, setMeetingsData] = useState([]);
+  const [userMeets, setUserMeets] = useState([]);
+  const [userPerMonthMeets, setUserPerMonthMeets] = useState([]);
+  const [showDayMeets, setShowDayMeets] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
 
   useEffect(() => {
     const getMeets = async () => {
       // console.log(user.ethAddress)
-      const { data } = await axios.patch('/api/meetings', {
-        "address": user.ethAddress
-      })
+      const { data } = await axios.patch("/api/meetings", {
+        address: user.ethAddress,
+      });
       console.log(data);
-      setUserMeets(data.data)
-      const dates = []
+      setUserMeets(data.data);
+      const dates = [];
       for (let i = 0; i < 12; i++) {
-        dates.push([])
+        dates.push([]);
       }
-      const meetsMetaData = {}
+      const meetsMetaData = {};
       // console.log(userMeets)
       // const meetShow = []
       const processUserMeets = () => {
@@ -54,29 +86,27 @@ const Calendar = () => {
           meetsMetaData[hash].push(meet);
           dates[month].push(day);
         });
-      }
+      };
       processUserMeets();
-      setUserPerMonthMeets(dates)
-      setMeetingsData(meetsMetaData)
+      setUserPerMonthMeets(dates);
+      setMeetingsData(meetsMetaData);
       // console.log(meetsMetaData)
       // setShowDayMeets(meetShow)
-    }
+    };
     getMeets();
     // console.log(meetingsData)
-  }, [])
-
+  }, []);
 
   const getMeetByDate = (date) => {
-
-    console.log(date)
+    console.log(date);
     const strDate = new Date(date);
-    console.log(strDate.toDateString())
+    console.log(strDate.toDateString());
     const meet = meetingsData[strDate];
     if (!meet) {
       return null;
     }
     return meet.title;
-  }
+  };
 
   return (
     <div className="relative flex justify-end w-9/12 h-5/6">
@@ -141,27 +171,38 @@ const Calendar = () => {
                         : index === 41
                         ? "border-[1px] rounded-br-[12px]"
                         : "border-[1px]",
-                      " border-[#5D8BF4C7] flex flex-row justify-end items-start p-2 "
+                      "relative border-[#5D8BF4C7] flex flex-col justify-end items-start p-2 gap-1"
                     )}
                   >
-                    <div className="flex flex-col justify-left items-left">
-                      {userPerMonthMeets[date.month()]?.includes(date.date()) && (
-                        <div className="w-2 h-2 bg-red-500 rounded-full">{meetingsData[date.date() + "," + date.month()]?.length} meets</div>
+                    <div className="flex flex-col bg-card-color w-auto h-full gap-1 relative">
+                      <div className="flex flex-col justify-start items-left w-auto">
+                        {userPerMonthMeets[date.month()]?.includes(
+                          date.date()
+                        ) && (
+                          <div className="px-2 py-[2px] relative w-full rounded-[5px] text-[10px] bg-[#EE2A2ACC]">
+                            {/*meetingsData[date.date() + "," + date.month()]?.length*/}{" "}
+                            meets
+                          </div>
+                        )}
+                      </div>
+                      {showDayMeets[index] && (
+                        <div className="relative">
+                          {meetingsData[date.date() + "," + date.month()]?.map(
+                            (meet, index) => {
+                              return (
+                                <div className="absolute flex flex-col items-left justify-start text-[10px] border-[2px] border-black bg-light-blue rounded-[5px]  bg-red-500 px-2 py-[2px] w-48 h-72">
+                                  {meet.title} {meet.description}
+                                </div>
+                              );
+                            }
+                          )}
+                          {/* <div className="absolute flex flex-col items-left justify-start text-[10px] border-[2px] border-black bg-light-blue rounded-[5px]  bg-red-500 px-2 py-[2px] w-48 h-">
+                          Meeting Title
+                        </div> */}
+                        </div>
                       )}
                     </div>
-                    {
-                      showDayMeets[index] && (
-                          <div>
-                            {
-                              meetingsData[date.date() + "," + date.month()]?.map((meet, index) => {
-                                return (
-                                  <div className="w-full h-10 bg-red-500 rounded-full">{meet.title}</div>
-                                )
-                              })
-                            }
-                          </div>
-                      )
-                    }
+
                     <h1
                       className={cn(
                         currentMonth ? "text-black" : "text-[#ccc]",
@@ -170,14 +211,14 @@ const Calendar = () => {
                           date.toDate().toDateString()
                           ? "bg-black text-white"
                           : "",
-                        "h-7 w-10 rounded-[5px] grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
+                        "absolute right-1 top-1 h-7 w-10 rounded-[5px] grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
                       )}
                       onClick={() => {
                         setSelectDate(date);
                         var shows = showDayMeets;
                         var curr = shows[index];
                         shows[index] = !curr;
-                        setShowDayMeets(shows)
+                        setShowDayMeets(shows);
                       }}
                     >
                       {date.date()}
