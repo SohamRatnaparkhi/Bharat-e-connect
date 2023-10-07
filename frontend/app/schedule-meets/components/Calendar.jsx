@@ -180,18 +180,25 @@ const Calendar = () => {
                           date.date()
                         ) && (
                           <div className="px-2 py-[2px] relative w-full rounded-[5px] text-[10px] bg-[#EE2A2ACC]">
-                            {/*meetingsData[date.date() + "," + date.month()]?.length*/}{" "}
-                            meets
+                            {
+                              meetingsData[date.date() + "," + date.month()]
+                                ?.length
+                            }{" "}
+                            meet(s)
                           </div>
                         )}
                       </div>
                       {showDayMeets[index] && (
-                        <div className="relative">
+                        <div className="overflow-y-scroll absolute z-10 flex flex-col items-left justify-start text-sm border-[2px] border-black bg-sky-blue rounded-[5px] gap-2 bg-red-500 px-2 py-2 w-48 h-auto">
                           {meetingsData[date.date() + "," + date.month()]?.map(
                             (meet, index) => {
                               return (
-                                <div className="absolute flex flex-col items-left justify-start text-[10px] border-[2px] border-black bg-light-blue rounded-[5px]  bg-red-500 px-2 py-[2px] w-48 h-72">
-                                  {meet.title} {meet.description}
+                                <div key={index} className="border-[1px] rounded-[10px] border-black text-black flex flex-col items-left justify-start text-sm  gap-3  px-2 py-[2px]">
+                                  <div>{meet.title}</div>{" "}
+                                  <div>{meet.description}</div>{" "}
+                                  <a href={`${window?.location?.origin}/meeting/lobby/${meet?.roomId}`} className="truncate text-sec-blue cursor-pointer hover:text-light-blue">
+                                    {window.location.origin}/meeting/lobby/{meet.roomId}
+                                  </a>
                                 </div>
                               );
                             }

@@ -10,6 +10,7 @@ import { formatTime } from "../../(utils)/TIme";
 import { FiArrowDown, FiArrowLeft } from "react-icons/fi";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { FcFile } from "react-icons/fc";
+import { BsShieldLock, BsShieldLockFill } from "react-icons/bs";
 
 import { SendMessage } from "@/app/svg-icons/MeetingOptions";
 import cn from "@/app/utils/cn";
@@ -75,6 +76,8 @@ const ChatBox = ({ chatBox, peers }) => {
         message: "ipfs.io/ipfs/" + res.data.IpfsHash,
         kind: "group",
         receiver: "*",
+        isLink: true,
+        fileName: currFile.name,
         timeStamp: formatTime(new Date().getTime()),
       });
       addRoomMessage({
@@ -89,7 +92,7 @@ const ChatBox = ({ chatBox, peers }) => {
       alert("Uploaded successfully");
     } catch (error) {
       console.log(error);
-      alert("There was an error. Please try again.");
+      // alert("There was an error. Please try again.");
     }
   };
 
@@ -311,6 +314,7 @@ const ChatBox = ({ chatBox, peers }) => {
                 "relative flex flex-col overflow-y-scroll ease-in-out duration-300"
               )}
             >
+              {console.log(`roomMessages: ${JSON.stringify(roomMessages)}`)}
               {roomMessages.map((message, index) => {
                 if (message.kind == "group")
                   return (
@@ -344,6 +348,7 @@ const ChatBox = ({ chatBox, peers }) => {
                             {message?.timeStamp}
                           </div>
                         </div>
+                        
                         {message.isLink && (
                           <div className="w-full h-full flex flex-col">
                             <div
@@ -367,7 +372,7 @@ const ChatBox = ({ chatBox, peers }) => {
                             </div>
                           </div>
                         )}
-                        {message.isLink == null && (
+                        {!message.isLink && (
                           <div className="relative mt-1 text-black">
                             {message.message}
                           </div>
@@ -477,7 +482,7 @@ const ChatBox = ({ chatBox, peers }) => {
                   }
                 }}
               >
-                <span className="text-sm absolute">🔐</span> <SendMessage />
+                <span className="text-2xl text-black absolute"><BsShieldLockFill /></span> <SendMessage />
               </div>
             </div>
           </div>
