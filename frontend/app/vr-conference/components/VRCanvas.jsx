@@ -9,6 +9,8 @@ import {
   Loader,
   OrbitControls,
   Sky,
+  RandomizedLight,
+  AccumulativeShadows,
 } from "@react-three/drei";
 import { VRButton, XR, useXR } from "@react-three/xr";
 import { Canvas } from "@react-three/fiber";
@@ -56,13 +58,20 @@ const VRCanvas = () => {
         <XR>
           <MovePlayer />
           <OrbitControls />
-          <DeviceOrientationControls />
+          {/* <DeviceOrientationControls /> */}
           <ambientLight />
-          <axesHelper args={[50]} />
-          <gridHelper args={[50, 50]} />
+          {/* <axesHelper args={[50]} />
+          <gridHelper args={[50, 50]} /> */}
 
-          {/* <Environment files='environments/sky-mountain.hdr' background blur={0} /> */}
-          <Sky sunPosition={[100, 20, 100]} />
+          <group position={[0, 1, 0]} rotateOnWorldAxis={[0, Math.PI/2, 0]}>
+            <Environment ground={{scale: 30, radius:130}} files='environments/shanghai_bund_2k.hdr' background blur={0} />
+          </group>
+          {/* <Sky sunPosition={[100, 20, 100]} /> */}
+          
+          <AccumulativeShadows position={[0, -0.5, 0]} frames={100} alphaTest={0.9} scale={10}>
+          <RandomizedLight amount={8} radius={10} ambient={0.5} position={[1, 5, -1]} />
+          </AccumulativeShadows>
+
           <hemisphereLight
             skyColor="#ffffff"
             groundColor="#000000"
@@ -73,7 +82,7 @@ const VRCanvas = () => {
                 <boxGeometry args={[1, 1, 1]} />
                 <meshStandardMaterial color="hotpink" />
             </mesh> */}
-          <group position={[0, 0, 0]}>
+          <group position={[0, 0, 0]} rotation={[0, Math.PI/4, 0]}>
             <ConferenceTable position={[0, 0, 0]} />
             {/* <SittingSoham position={[0, 0.3, -2]} /> */}
             {/* <SittingSoham position={positions[3]} rotation={[0, Math.PI/2, 0]} /> */}
