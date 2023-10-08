@@ -42,7 +42,7 @@ const Footer = () => {
                 <div className="flex flex-col md:flex-row">
                     <div className="w-full md:w-1/2 mb-4 md:mb-0 md:p-4 flex items-left">
                         <img src="/img/aictelogo.svg" alt="AICTE Logo" className="h-24 w-auto" />
-                        <img src="/img/Bharat_e_connect-logo.jpeg" alt="BharatConnect Logo" className="h-24 w-auto ml-4" />
+                        <img src="/img/BharatConnect logo.svg" alt="BharatConnect Logo" className="h-24 w-auto ml-4" />
                     </div>
 
                     <div className="w-full md:w-1/2 text-white text-xl font-[400]  text-right mt-4 md:mt-0 uppercase">

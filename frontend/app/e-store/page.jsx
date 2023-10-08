@@ -40,7 +40,7 @@ const Dashboard = () => {
                         </thead>
                         <tbody>
                             {data.map((file) => (
-                                <tr key={file.id}>
+                                <tr key={file.id} className="hover:bg-[#dddddd] ease-in-out duration-300">
                                     <td>{file.name}</td>
                                     <td>{file.type}</td>
                                     <td>{file.date}</td>
