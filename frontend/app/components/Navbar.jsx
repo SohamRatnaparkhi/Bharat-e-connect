@@ -28,8 +28,10 @@ const Navbar = () => {
                     <button className='hover:bg-light-blue rounded-xl hover:px-3 hover:p-3 hover:text-white'>
                         <AiOutlineSearch size={25} />
                     </button>
-                    <button className="flex items-center justify-evenly font-[600] text-white text-sm border-2 bg-light-blue rounded-xl p-3 w-40 hover:px-3 hover:p-4">
-                        Connect to wallet
+                    <button className="flex items-center justify-evenly font-[600] text-white text-sm border-2 bg-light-blue rounded-xl p-3 w-40 hover:px-3 hover:p-4"
+                    >
+                        <a href="/login">Login/Register</a>
+                        
                     </button>
 
                 </div>

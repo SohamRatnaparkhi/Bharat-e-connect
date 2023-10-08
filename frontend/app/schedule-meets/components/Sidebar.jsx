@@ -7,11 +7,14 @@ import { useRouter } from "next/navigation";
 import { useScrollTrigger } from "@mui/material";
 
 import cn from "@/app/utils/cn";
+import { useAppStore } from "@/app/store/AppStore";
 
 const Sidebar = () => {
   const { push } = useRouter();
+  const setUser = useAppStore((state) => state.setUser);
+  const setLogin = useAppStore((state) => state.setLogin);
 
-  const [section, setSection] = useState("profile");
+  const [section, setSection] = useState("meeting");
 
   return (
     <div className="relative h-full w-1/5 flex flex-col justify-center cursor-pointer">
@@ -20,19 +23,6 @@ const Sidebar = () => {
           <div
             onClick={() => {
                 push('/schedule-meets')
-              setSection("profile");
-            }}
-            className={cn(
-              section === "profile"
-                ? "text-white bg-[#5D8BF4]"
-                : "text-black bg-transparent",
-              "relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont   hover:px-3 ease-in-out duration-300 "
-            )}
-          >
-            Profile
-          </div>
-          <div
-            onClick={() => {
               setSection("meeting");
             }}
             className={cn(
@@ -44,6 +34,19 @@ const Sidebar = () => {
           >
             Meeting
           </div>
+          {/* <div
+            onClick={() => {
+              setSection("meeting");
+            }}
+            className={cn(
+              section === "meeting"
+                ? "text-white bg-[#5D8BF4]"
+                : "text-black bg-transparent",
+              "relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont   hover:px-3 ease-in-out duration-300 "
+            )}
+          >
+            Meeting
+          </div> */}
           <div
             onClick={() => {
               setSection("phonebook");
@@ -60,33 +63,39 @@ const Sidebar = () => {
           </div>
           <div
             onClick={() => {
-              setSection("recordings");
+              setSection("Store");
+              push("/e-store/");
             }}
             className={cn(
-              section === "recordings"
+              section === "Store"
                 ? "text-white bg-[#5D8BF4]"
                 : "text-black bg-transparent",
               "relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont   hover:px-3 ease-in-out duration-300 "
             )}
           >
-            Recordings
+            Store
           </div>
-          <div
+          {/* <div
             onClick={() => {
-              setSection("files");
+              setSection("store");
             }}
             className={cn(
-              section === "files"
+              section === "store"
                 ? "text-white bg-[#5D8BF4]"
                 : "text-black bg-transparent",
               "relative h-12 w-56 rounded-xl flex flex-row items-center justify-start p-6 font-mont   hover:px-3 ease-in-out duration-300 "
             )}
           >
             Files
-          </div>
+          </div> */}
         </div>
 
-        <div className="relative h-1/4 flex flex-row items-center justify-start ml-10 text-black">
+        <div className="relative h-1/4 flex flex-row items-center justify-start ml-10 text-black"
+        onClick={() => {
+          setUser(null);
+          setLogin(false);
+          push("/login");
+        }}>
           <UserIcon styles={{ width: "100px", height: "100px" }} />
           <div className="pl-3 font-mont text-xl">Logout</div>
         </div>
