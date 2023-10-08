@@ -1,0 +1,64 @@
+{
+    "e-store-data": [
+        {
+            "name": "Team Meeting - October 2023",
+            "link": "https://www.example.com/meeting1",
+            "type": "video",
+            "date": "2023-10-15"
+        }, 
+        {
+            "name": "Board Meeting - September 2023",
+            "link": "https://www.example.com/meeting2",
+            "type": "text",
+            "date": "2023-09-25"
+        },
+        {
+            "name": "Sales Meeting - November 2023",
+            "link": "https://www.example.com/meeting3",
+            "type": "audio",
+            "date": "2023-11-05"
+        },
+        {
+            "name": "Product Launch Meeting",
+            "link": "https://www.example.com/meeting4",
+            "type": "video",
+            "date": "2023-10-10"
+        },
+        {
+            "name": "Quarterly Review Meeting",
+            "link": "https://www.example.com/meeting5",
+            "type": "text",
+            "date": "2023-10-05"
+        },
+        {
+            "name": "Marketing Strategy Meeting",
+            "link": "https://www.example.com/meeting6",
+            "type": "audio",
+            "date": "2023-09-28"
+        },
+        {
+            "name": "HR Team Meeting - October 2023",
+            "link": "https://www.example.com/meeting7",
+            "type": "video",
+            "date": "2023-10-12"
+        },
+        {
+            "name": "Budget Planning Meeting",
+            "link": "https://www.example.com/meeting8",
+            "type": "text",
+            "date": "2023-09-20"
+        },
+        {
+            "name": "Product Development Meeting",
+            "link": "https://www.example.com/meeting9",
+            "type": "audio",
+            "date": "2023-11-02"
+        },
+        {
+            "name": "Project Kickoff Meeting",
+            "link": "https://www.example.com/meeting10",
+            "type": "video",
+            "date": "2023-10-08"
+        }
+    ]
+}
