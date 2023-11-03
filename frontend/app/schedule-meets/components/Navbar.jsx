@@ -13,9 +13,12 @@ const Navbar = ({scheduleMeet, setScheduleMeet}) => {
     
           </div>
 
-            <div className="flex items-center justify-around w-72 bg-white cursor-pointer ">
+            <div className="flex items-center justify-around w-80 bg-white cursor-pointer ">
               <div onClick={()=>{setScheduleMeet(true)}} className="flex items-center justify-evenly font-semi-bold text-light-blue text-sm border-2 border-black rounded-full p-1 w-40 hover:drop-shadow-[0_20px_20px_rgba(93, 139, 244, 1)]">
                 <span className="text-xl">+</span> <span>Create Meet</span>
+              </div>
+              <div className="bg-dark-blue p-1 px-2 rounded-[10px]">
+                <span className="text-xs text-white">VR Meet</span>
               </div>
               <div className="flex items-center">
                 <UserIcon />

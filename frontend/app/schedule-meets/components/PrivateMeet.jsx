@@ -92,11 +92,11 @@ const PrivateMeet = ({ setMeetType, setScheduleMeet }) => {
 
     console.log("User", user)
 
-    const day = Number(date.split("-")[2]);
-    const month = Number(date.split("-")[1]);
-    const year = Number(date.split("-")[0]);
+    const day = Number(date?.split("-")[2]);
+    const month = Number(date?.split("-")[1]);
+    const year = Number(date?.split("-")[0]);
 
-    const commaSeparatedHosts = walletsStr.split(",");
+    const commaSeparatedHosts = walletsStr?.split(",");
     const commaSeparatedParticipants = walletsStrParticipants?.split(",");
     if (commaSeparatedHosts) hostWalletAddresses.push(...commaSeparatedHosts, user?.ethAddress);
     if (commaSeparatedParticipants)
