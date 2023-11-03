@@ -10,12 +10,14 @@ import Sidebar from "./components/Sidebar";
 import Calendar from "./components/Calendar";
 import PublicMeet from "./components/PublicMeet";
 import PrivateMeet from "./components/PrivateMeet";
+import VRMeet from "./components/VRMeet";
 import AddParticipants from "./components/AddParticipants";
 import cn from "../utils/cn";
 
 const ScheduleMeet = () => {
 
   const [scheduleMeet, setScheduleMeet] = React.useState(false);
+  const [scheduleVRMeet, setScheduleVRMeet] = React.useState(false);
   const [meetType, setMeetType] = React.useState("public");
   
 
@@ -29,9 +31,12 @@ const ScheduleMeet = () => {
          {meetType==="private" && scheduleMeet && <PrivateMeet setMeetType={setMeetType} setScheduleMeet={setScheduleMeet} />}
       {/* -------------------------- private meet ends -------------------------- */}
 
+      {/* -------------------------- VR meet starts -------------------------- */}
+      {scheduleVRMeet && <VRMeet setScheduleVRMeet={setScheduleVRMeet} />}
+
 
         <div className={cn(scheduleMeet ? "z-0 absolute blur-sm" : "blur-0" ,"w-full h-full bg-white")}>
-      <Navbar scheduleMeet={scheduleMeet} setScheduleMeet={setScheduleMeet} />
+      <Navbar scheduleMeet={scheduleMeet} setScheduleMeet={setScheduleMeet} scheduleVRMeet={scheduleVRMeet} setScheduleVRMeet={setScheduleVRMeet} />
       <div className="flex flex-row w-full h-90% items-center justify-between">
         <Sidebar />
         <Calendar scheduleMeet={scheduleMeet} />

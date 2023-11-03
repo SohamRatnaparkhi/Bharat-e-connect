@@ -3,7 +3,7 @@ import React from 'react'
 import UserIcon from "../../svg-icons/UserIcon";
 import Image from 'next/image'
 
-const Navbar = ({scheduleMeet, setScheduleMeet}) => {
+const Navbar = ({scheduleMeet, setScheduleMeet, scheduleVRMeet, setScheduleVRMeet}) => {
   return (
     <div className="w-full h-10%">
         <div className="flex justify-between items-center h-full px-10">
@@ -17,7 +17,7 @@ const Navbar = ({scheduleMeet, setScheduleMeet}) => {
               <div onClick={()=>{setScheduleMeet(true)}} className="flex items-center justify-evenly font-semi-bold text-light-blue text-sm border-2 border-black rounded-full p-1 w-40 hover:drop-shadow-[0_20px_20px_rgba(93, 139, 244, 1)]">
                 <span className="text-xl">+</span> <span>Create Meet</span>
               </div>
-              <div className="bg-dark-blue p-1 px-2 rounded-[10px]">
+              <div onClick={() => {setScheduleVRMeet(true)}} className="bg-dark-blue p-1 px-2 rounded-[10px]">
                 <span className="text-xs text-white">VR Meet</span>
               </div>
               <div className="flex items-center">

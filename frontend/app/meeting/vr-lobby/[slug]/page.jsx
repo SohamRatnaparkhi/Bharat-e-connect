@@ -27,8 +27,9 @@ import Navbar from "../../components/lobby-comps/Navbar";
 
 import "../../../globals.css";
 import cn from "@/app/utils/cn";
+import { useVRStore } from "@/app/store/VRStore";
 
-const MeetLobby = ({ params }) => {
+const VRMeetLobby = ({ params }) => {
   const videoRef = useRef();
   const [peerAddress, setPeerAddress] = React.useState(null);
   const { push } = useRouter();
@@ -39,6 +40,9 @@ const MeetLobby = ({ params }) => {
   const { peers } = usePeers();
   const { joinLobby, leaveLobby, isLoading, isLobbyJoined } = useLobby();
   const [accessDenied, setAccessDenied] = React.useState(false);
+
+  const { occupiedPositions, toggleOccupiedPosition } = useVRStore();
+
 
   const { fetchAudioStream, stopAudioStream } = useAudio();
   const {
@@ -123,6 +127,16 @@ const MeetLobby = ({ params }) => {
       } else setAccessDenied(true);
     } else pushPeerToLobby();
   };
+  
+  const [occupied, setOccupied] = React.useState(new Array(10).fill(false));
+  
+
+  const setVRPosition = (index) => {
+    
+    // TODO: Add logic to set position to the character model.
+    toggleOccupiedPosition(index);
+    // console.log(occupiedPositions)
+  }
 
   const [videoOn, setVideoOn] = React.useState(false);
   const [audioOn, setAudioOn] = React.useState(false);
@@ -177,10 +191,11 @@ const MeetLobby = ({ params }) => {
       {/* {isLobbyJoined}
       {JSON.stringify(peers)} */}
       {isRoomJoined}
-      <h2 className="text-3xl font-bold m-5">READY TO JOIN?</h2>
+      {/* <h2 className="text-3xl font-bold m-5">READY TO JOIN?</h2> */}
 
-      <div className="flex flex-col items-center bg-[#5D8BF436] h-3/5 w-1/2 rounded-[20px]">
+      <div className="flex flex-col items-center bg-[#5D8BF436] h-4/5 w-4/5 rounded-[20px]">
         <div className="relative w-full h-25% flex flex-row justify-center items-center">
+          
           <div className="flex flex-col w-90% items-center pt-[1px] justify-center ml-[60px]">
             <div className="flex flex-row justify-center w-3/5 font-semibold">
               Meeting id:
@@ -188,6 +203,7 @@ const MeetLobby = ({ params }) => {
                 {params?.slug}
               </div>
             </div>
+
             {!isLobbyJoined ? (
               <>
                 <Button
@@ -201,8 +217,9 @@ const MeetLobby = ({ params }) => {
               <div className="font-semibold mt-3">Joined! ✅</div>
             )}
           </div>
+
           <div className="w-10% h-full pt-5 pl-2 flex flex-col justify-start">
-            <div className="border-[3px] border-black w-[35px] h-[35px] rounded-full flex items-center justify-center text-xl font-semibold hove:text-[#EE2A2A]">
+            <div className="border-[3px] border-black w-[35px] h-[35px] rounded-full flex items-center justify-center text-xl font-semibold hover:text-[#EE2A2A]">
               {/* {isLobbyJoined ? "" : error} */}
               {isLobbyJoined ? (
                 <button disabled={!leaveLobby.isCallable} onClick={leaveLobby}>
@@ -213,10 +230,11 @@ const MeetLobby = ({ params }) => {
               )}
             </div>
           </div>
+
         </div>
 
-        <div className="relative flex justify-center w-3/6 h-3/6">
-          {!videoOn ? (
+        <div className="relative flex justify-center w-5/6 h-3/6">
+          {/* {!videoOn ? (
             <div className="-z-2 w-full h-full rounded-[6px] bg-black bg-gradient-to-t from-slate-400 flex justify-center items-center"></div>
           ) : (
             <video
@@ -225,7 +243,7 @@ const MeetLobby = ({ params }) => {
               autoPlay
               muted
             />
-          )}
+          )} */}
           {isRoomJoined && (
             <div>
               <VideoScreen peers={peers} />
@@ -234,7 +252,7 @@ const MeetLobby = ({ params }) => {
             </div>
           )}
           {/* Video and mic buttons */}
-          <div className="absolute left-1/3 bottom-3 w-30% h-15% flex flex-row justify-around cursor-pointer">
+          {/* <div className="absolute left-1/3 bottom-3 w-30% h-15% flex flex-row justify-around cursor-pointer">
             <button
               disabled={!fetchVideoStream.isCallable}
               onClick={() => {
@@ -263,6 +281,35 @@ const MeetLobby = ({ params }) => {
             >
               {audioOn ? <FiMic /> : <FiMicOff />}
             </button>
+          </div> */}
+          <div className="flex flex-row items-center justify-evenly w-full h-auto border-black border-[1px]">
+            
+            <div className="w-5/12 h-95%">
+                <div className="grid grid-cols-5 gap-1 w-full h-full">
+                    {occupiedPositions.map((item, index) => (
+                    <div key={index} className="flex flex-col items-center justify-center w-full h-full">
+                        <div onClick={() => {setVRPosition(index)}} className={cn(!item? "border-[#29822a]" : "border-[#EE2A2A]", "flex items-center justify-center w-95% h-1/2 rounded-[8px] border-[1px] bg-white hover:border-sec-blue ease-in-out duration-200")}>
+                            <div className={cn(!item? "border-[#29822a]" : "border-[#EE2A2A]", "flex items-center justify-center w-90% h-90% rounded-[8px] border-[1px] hover:border-sec-blue ease-in-out duration-200")}>
+                                {index + 1} 
+                            </div>
+                        </div>
+                    </div>
+                    ))}
+                    
+                </div>
+            </div>
+
+            <div className="w-5/12 h-95% border-black border-[1px]">
+                <div className="grid grid-cols-3 gap-1 w-full h-full">
+                    <div className="w-full h-full border-[1px] border-black"></div>
+                    <div className="w-full h-full border-[1px] border-black"></div>
+                    <div className="w-full h-full border-[1px] border-black"></div>
+                    <div className="w-full h-full border-[1px] border-black"></div>
+                    <div className="w-full h-full border-[1px] border-black"></div>
+                    <div className="w-full h-full border-[1px] border-black"></div>
+                </div>
+            </div>
+
           </div>
         </div>
 
@@ -277,7 +324,7 @@ const MeetLobby = ({ params }) => {
               placeholder="Your display name"
               value={displayNameText}
               onChange={(e) => setDisplayNameText(e.target.value)}
-              className="border-2 border-gray-300 text-black h-10 px-16  rounded-[2px] text-center text-sm focus:outline-none"
+              className="border-[1px] border-gray-300 text-black h-10 px-16  rounded-[8px] text-center text-sm focus:outline-none"
             />
           </div>
         )}
@@ -285,7 +332,7 @@ const MeetLobby = ({ params }) => {
         {isPeerHost && <div>Add Participants:</div>}
       </div>
 
-      <div className="flex justify-center items-center w-20% mt-6">
+      <div className="flex justify-center items-center w-20% mt-2">
         <Button
           // disabled={!setDisplayName.isCallable}
           disabled={!joinRoom.isCallable}
@@ -302,4 +349,4 @@ const MeetLobby = ({ params }) => {
   );
 };
 
-export default MeetLobby;
+export default VRMeetLobby;
