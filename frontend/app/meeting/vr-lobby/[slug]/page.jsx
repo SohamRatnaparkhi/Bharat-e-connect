@@ -162,7 +162,7 @@ const VRMeetLobby = ({ params }) => {
 
   useEffect(() => {
     if (isRoomJoined) {
-      push(`/meeting/room/${params.slug}`);
+      push(`/meeting/vr-room/${params.slug}`);
     }
     console.log(isRoomJoined);
     console.log("abcd");
