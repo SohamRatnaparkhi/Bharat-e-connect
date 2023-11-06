@@ -9,6 +9,10 @@ export const useVRStore = create((set) => ({
     setMyAnimation: (myAnimation) => set({ myAnimation }),  
     
     peers: [],
+    addPeer: (peer) => set((state) => ({ peers: [...state.peers, peer] })),
+
+    peerModels: [],
+    addPeerModel: (peerModel) => set((state) => ({ peerModels: [...state.peerModels, peerModel] })),
 
     isHeadFollow: false,
     setIsHeadFollow: (isHeadFollow) => set(() => ({ isHeadFollow: isHeadFollow })),
