@@ -23,6 +23,7 @@ import { SohamPModel } from "../models/Soham-P-model";
 import { positions } from "../positions";
 import { useControls } from "leva";
 import { useVRStore } from "@/app/store/VRStore";
+import { CharacterModel } from "../models/CharacterModel";
 
 const MovePlayer = () => {
   const { isPresenting, player } = useXR();
@@ -44,15 +45,15 @@ const VRCanvas = () => {
 
   const { animation } = useControls({
     animation: {
-      options:{
-      Sitting_Idle: "sitting-anim",
-      Sitting_Clap: "sitting-clap-anim",
-      Sitting_Clap_1: "sitting-clap1-anim",
-      Sitting_Talking: "sitting-talking-anim",
-      Sitting_Laughing: "sitting-laughing-anim",
-      Sitting_male: "sitting-male-anim",
+      options: {
+        Sitting_Idle: "sitting-anim",
+        Sitting_Clap: "sitting-clap-anim",
+        Sitting_Clap_1: "sitting-clap1-anim",
+        Sitting_Talking: "sitting-talking-anim",
+        Sitting_Laughing: "sitting-laughing-anim",
+        Sitting_male: "sitting-male-anim",
       },
-    }
+    },
   });
 
   useEffect(() => {
@@ -126,13 +127,15 @@ const VRCanvas = () => {
             </mesh> */}
           <group position={[0, 0, 0]} rotation={[0, Math.PI / 4, 0]}>
             <ConferenceTable position={[0, 0, 0]} />
-            {/* <SittingSoham position={[0, 0.3, -2]} /> */}
-            {/* <SittingSoham position={positions[3]} rotation={[0, Math.PI/2, 0]} /> */}
-            <SohamR position={positions[1]} rotation={[0, Math.PI, 0]} />
-            <SohamPModel
-              position={positions[2]}
-              rotation={[0, -Math.PI / 2, 0]}
-            />
+            {[...Array(5)].map((_, index) => (
+              <CharacterModel
+                key={index}
+                orientation={index}
+                modelLink = {"https://models.readyplayer.me/654a2335d09f0280f032b08c.glb"}
+                position={positions[index + 1]}
+                rotation={[Math.PI, 0, 0]}
+              />
+            ))}
           </group>
         </XR>
       </Canvas>
